@@ -1,7 +1,7 @@
 import ENVIRONMENT from "../config/environment";
-import { LOCALSTORAGE_TOKEN_KEY } from "../context/AuthContext";
+import { LOCALSTORAGE_TOKEN_KEY } from "../Context/AuthContext";
 
-export async function getWorkspaces (){
+export async function getWorkspaces() {
     const response_http = await fetch(
         ENVIRONMENT.API_URL + '/api/workspace',
         {
