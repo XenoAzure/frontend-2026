@@ -3,14 +3,14 @@ import { Link } from 'react-router'
 import useForm from '../../hooks/useForm'
 import { login } from '../../services/authService'
 import useRequest from '../../hooks/useRequest'
-import { AuthContext } from '../../context/AuthContext'
+import { AuthContext } from '../../Context/AuthContext'
 
 const LoginScreen = () => {
 
     const {
-        sendRequest, 
-        error, 
-        response, 
+        sendRequest,
+        error,
+        response,
         loading
     } = useRequest()
 
@@ -24,9 +24,9 @@ const LoginScreen = () => {
         [LOGIN_FORM_FIELDS.PASSWORD]: ''
     }
 
-    const {manageLogin} = useContext(AuthContext)
+    const { manageLogin } = useContext(AuthContext)
 
-    function onLogin (formState){
+    function onLogin(formState) {
         sendRequest({
             requestCb: async () => {
                 return await login({
@@ -60,7 +60,7 @@ const LoginScreen = () => {
     useEffect(
         () => {
             //Si la respuesta es correcta
-            if(response && response.ok){
+            if (response && response.ok) {
                 //Guardo el token en mi contexto
                 manageLogin(response.data.auth_token)
             }
@@ -68,7 +68,7 @@ const LoginScreen = () => {
         [response]
     )
 
-   
+
     console.log(formState)
 
     return (
@@ -79,26 +79,26 @@ const LoginScreen = () => {
             <form onSubmit={onSubmit}>
                 <div>
                     <label htmlFor="email">Email</label>
-                    <input 
-                        type="email" 
-                        id="email"  
-                        name={LOGIN_FORM_FIELDS.EMAIL} 
+                    <input
+                        type="email"
+                        id="email"
+                        name={LOGIN_FORM_FIELDS.EMAIL}
                         onChange={handleChangeInput}
                     />
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name={LOGIN_FORM_FIELDS.PASSWORD} 
+                    <input
+                        type="password"
+                        id="password"
+                        name={LOGIN_FORM_FIELDS.PASSWORD}
                         onChange={handleChangeInput}
                     />
                 </div>
                 <button type="submit">Iniciar sesion</button>
             </form>
             <span>No tienes una cuenta? <Link to="/register">Registrarse</Link></span>
-            <br/>
+            <br />
             <span>Olvidaste tu contraseña? <Link to="/reset-password-request">Restablecer</Link></span>
         </div>
     )
