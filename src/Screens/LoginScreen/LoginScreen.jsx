@@ -38,38 +38,22 @@ const LoginScreen = () => {
     }
 
     const {
-        handleChangeInput, //Funcion de cambio del input, debemos asociarlas a cada input
-        onSubmit, //Funcion que asociaremos al evento submit del formario
+        handleChangeInput,
+        onSubmit,
         formState
-    } = useForm({ //Usamos useForm cada vez que tengamos que capurar campos de un formulario (Manejo de formularios)
-        initialFormState,  //Estado incial del formulario
-        submitFn: onLogin //Funcion que se activa al enviar formulario
+    } = useForm({
+        initialFormState,
+        submitFn: onLogin
     })
 
-    console.log(
-        {
-            response,
-            error,
-            loading
-        }
-    )
-
-    /* 
-    La funcion se carga cada vez que cambie response
-    */
     useEffect(
         () => {
-            //Si la respuesta es correcta
             if (response && response.ok) {
-                //Guardo el token en mi contexto
                 manageLogin(response.data.auth_token)
             }
         },
         [response]
     )
-
-
-    console.log(formState)
 
     return (
         <div>
@@ -95,8 +79,17 @@ const LoginScreen = () => {
                         onChange={handleChangeInput}
                     />
                 </div>
-                <button type="submit">Iniciar sesion</button>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Cargando...' : 'Iniciar sesion'}
+                </button>
             </form>
+            {response && !response.ok && (
+                <p style={{ color: 'red' }}>
+                    {response.message === 'Debes verificar tu correo electronico antes de iniciar sesion'
+                        ? 'Por favor, verifica tu mail'
+                        : response.message}
+                </p>
+            )}
             <span>No tienes una cuenta? <Link to="/register">Registrarse</Link></span>
             <br />
             <span>Olvidaste tu contraseña? <Link to="/reset-password-request">Restablecer</Link></span>
