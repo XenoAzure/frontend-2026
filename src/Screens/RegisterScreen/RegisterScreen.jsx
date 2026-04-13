@@ -62,26 +62,35 @@ const RegisterScreen = () => {
     )
 
     return (
-        <div>
-            <h1>
-                Registrarse
-            </h1>
-            <form onSubmit={onSubmit}>
-                <div>
-                    <label htmlFor="name">Name</label>
-                    <input type="text" id="name" name={REGISTER_FORM_FIELDS.NAME} onChange={handleChangeInput} value={formState[REGISTER_FORM_FIELDS.NAME]} />
+        <div className="page-container">
+            <div className="glass-card">
+                <h1 className="title">
+                    Registrarse
+                </h1>
+                <form className="form" onSubmit={onSubmit}>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="name">Nombre</label>
+                        <input className="form-input" type="text" id="name" name={REGISTER_FORM_FIELDS.NAME} onChange={handleChangeInput} value={formState[REGISTER_FORM_FIELDS.NAME]} />
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="email">Email</label>
+                        <input className="form-input" type="email" id="email" name={REGISTER_FORM_FIELDS.EMAIL} onChange={handleChangeInput} value={formState[REGISTER_FORM_FIELDS.EMAIL]} />
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="password">Password</label>
+                        <input className="form-input" type="password" id="password" name={REGISTER_FORM_FIELDS.PASSWORD} onChange={handleChangeInput} value={formState[REGISTER_FORM_FIELDS.PASSWORD]} />
+                    </div>
+                    <button className="btn" type="submit" disabled={loading}>{loading ? 'Cargando...' : 'Registrarse'}</button>
+                    {error && (
+                        <div className="error-text">
+                            {error.message || 'Error en el registro'}
+                        </div>
+                    )}
+                </form>
+                <div className="footer-links">
+                    <span>¿Ya tienes una cuenta? <Link className="link" to="/login">Iniciar sesión</Link></span>
                 </div>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" name={REGISTER_FORM_FIELDS.EMAIL} onChange={handleChangeInput} value={formState[REGISTER_FORM_FIELDS.EMAIL]} />
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input type="password" id="password" name={REGISTER_FORM_FIELDS.PASSWORD} onChange={handleChangeInput} value={formState[REGISTER_FORM_FIELDS.PASSWORD]} />
-                </div>
-                <button type="submit" >Registrarse</button>
-            </form>
-            <span>Ya tienes una cuenta? <Link to="/login">Iniciar sesion</Link></span>
+            </div>
         </div>
     )
 }

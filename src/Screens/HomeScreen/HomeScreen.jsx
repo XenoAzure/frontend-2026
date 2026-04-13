@@ -9,31 +9,36 @@ const HomeScreen = () => {
   const {response, loading, error, workspaces} = useWorkspaces()
 
  
-  return (
-    <div>
-      <h1>Bienvenido, seleccione su espacio de trabajo</h1>
-      {
-        loading && <span>Cargando</span>
-      }
-      {
-        !loading && workspaces && <div>
-          {
-          workspaces.length === 0
-          ? <span>No hay espacios de trabajo</span>
-          : workspaces.map(
-            (workspace) => {
-              return (
-                <div key={workspace.workspace_id}>
-                  <h2>{workspace.workspace_title}</h2>
-                  <Link to={'/workspace/' + workspace.workspace_id}>Abrir espacio de trabajo</Link>
+    return (
+        <div className="dashboard-container dashboard-card">
+            <div className="header-actions">
+                <h1 className="dashboard-title" style={{ fontSize: '1.8rem' }}>Tus espacios de trabajo</h1>
+                <Link to='/workspace/new' className="btn">Nuevo Espacio</Link>
+            </div>
+            
+            {loading && <div className="text-center text-muted">Cargando espacios...</div>}
+            
+            {!loading && workspaces && (
+                <div className="workspace-list">
+                    {workspaces.length === 0 ? (
+                        <div className="empty-state">
+                            <h3>No hay espacios de trabajo</h3>
+                            <p style={{ marginTop: '0.5rem' }}>Crea uno nuevo para comenzar a trabajar.</p>
+                        </div>
+                    ) : (
+                        workspaces.map((workspace) => (
+                            <div key={workspace.workspace_id} className="workspace-item">
+                                <h2>{workspace.workspace_title}</h2>
+                                <Link className="btn btn-secondary" to={'/workspace/' + workspace.workspace_id}>
+                                    Abrir
+                                </Link>
+                            </div>
+                        ))
+                    )}
                 </div>
-              )
-            }
-          )}
+            )}
         </div>
-      }
-    </div>
-  )
+    )
 }
 
 export default HomeScreen

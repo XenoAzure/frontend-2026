@@ -44,44 +44,41 @@ const ResetPasswordRequestScreen = () => {
 
 
 
-  return (
-    <div>
-
-      <h1>Restablecer contraseña</h1>
-
-      {
-        response && !loading && !error ?
-          <p>{response.message}</p>
-          :
-          <>
-            <p>
-              Se enviara un mail con instrucciones para que puedas restablecer tu contraseña
-            </p>
-            <form onSubmit={onSubmit}>
-              <div>
-                <label htmlFor="email">Email:</label>
-                <input
-                  type="email"
-                  name={FORM_FIELDS.EMAIL}
-                  id="email"
-                  onChange={handleChangeInput}
-                  value={formState[FORM_FIELDS.EMAIL]}
-                />
-              </div>
-              <button type='submit' disabled={loading}>{loading ? 'Cargando' : 'Enviar solicitud'}</button>
-            </form>
-            <span>
-              Recuerdas tu contraseña? <Link to={'/login'}>Inciar sesion</Link>
-            </span>
-            <br />
-            <span>No tienes una cuenta? <Link to="/register">Registrarse</Link></span>
-          </>
-
-      }
-
-
-    </div>
-  )
+    return (
+        <div className="page-container">
+            <div className="glass-card">
+                <h1 className="title">Restablecer contraseña</h1>
+                {
+                    response && !loading && !error ?
+                        <div className="success-text">{response.message}</div>
+                        :
+                        <>
+                            <p className="text-center text-sm" style={{ marginBottom: '1.5rem' }}>
+                                Se enviará un correo con instrucciones para que puedas restablecer tu contraseña
+                            </p>
+                            <form className="form" onSubmit={onSubmit}>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="email">Email</label>
+                                    <input
+                                        className="form-input"
+                                        type="email"
+                                        name={FORM_FIELDS.EMAIL}
+                                        id="email"
+                                        onChange={handleChangeInput}
+                                        value={formState[FORM_FIELDS.EMAIL]}
+                                    />
+                                </div>
+                                <button className="btn" type='submit' disabled={loading}>{loading ? 'Cargando...' : 'Enviar solicitud'}</button>
+                            </form>
+                            <div className="footer-links">
+                                <span>¿Recuerdas tu contraseña? <Link className="link" to={'/login'}>Iniciar sesión</Link></span>
+                                <span>¿No tienes una cuenta? <Link className="link" to="/register">Registrarse</Link></span>
+                            </div>
+                        </>
+                }
+            </div>
+        </div>
+    )
 }
 
 export default ResetPasswordRequestScreen
