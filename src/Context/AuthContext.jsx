@@ -1,20 +1,19 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import ENVIRONMENT from "../config/environment";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext(
     {
         isLogged: false,
-        manageLogin: (auth_token) => {}
+        user: null,
+        manageLogin: (auth_token) => {},
+        logout: () => {}
     }
 )
 
 export const LOCALSTORAGE_TOKEN_KEY = 'auth_token_slack'
 
-/* 
-Va a manejar el estado de sesion del usuario
-Es un contexto global
-    Esto es asi porque queremos desde cualquier lugar de la aplicacion saber si el usuario esta o no logueado
-*/
 function AuthContextProvider ({children}){
     const navigate = useNavigate()
     const [isLogged, setIsLogged] = useState(
@@ -22,18 +21,69 @@ function AuthContextProvider ({children}){
             localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
         )
     )
+    const [user, setUser] = useState(null)
+    const [isLoadingUser, setIsLoadingUser] = useState(true)
+
+    const fetchUserProfile = async (token) => {
+        try {
+            const response = await fetch(`${ENVIRONMENT.API_URL}/api/user/me`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (data.ok) {
+                setUser(data.data.user);
+            } else {
+                // If token is invalid according to backend, logout
+                handleLogout();
+            }
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+            // Fallback: decode token to get basic info if backend is down
+            try {
+                const decoded = jwtDecode(token);
+                setUser({
+                    id: decoded.id,
+                    name: decoded.name,
+                    email: decoded.email
+                });
+            } catch (e) {
+                handleLogout();
+            }
+        } finally {
+            setIsLoadingUser(false);
+        }
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
+        setIsLogged(false);
+        setUser(null);
+        navigate('/login');
+    }
+
+    useEffect(() => {
+        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+        if (token) {
+            fetchUserProfile(token);
+        } else {
+            setIsLoadingUser(false);
+        }
+    }, [isLogged]);
 
     function manageLogin (auth_token){
-        //Guardar el auth_token en el localstorage
-        localStorage.setItem('auth_token_slack', auth_token)
+        localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, auth_token)
         setIsLogged(true)
-        //Redirecciono a home
         navigate('/home')
     }
 
     const providerValues = {
         isLogged,
-        manageLogin
+        user,
+        isLoadingUser,
+        manageLogin,
+        logout: handleLogout
     }
 
     return (

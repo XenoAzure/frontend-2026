@@ -8,6 +8,7 @@ import LandingScreen from './Screens/LandingScreen/LandingScreen'
 import HomeScreen from './Screens/HomeScreen/HomeScreen'
 import WorkspaceNewScreen from './Screens/WorkspaceScreen/WorkspaceNewScreen'
 import LoadingScreen from './Components/LoadingScreen/LoadingScreen'
+import MainLayout from './Components/MainLayout/MainLayout'
 import { LanguageProvider } from './Context/LanguageContext'
 
 
@@ -50,14 +51,16 @@ const App = () => {
             element={<ResetPasswordRequestScreen />}
           />
           <Route element={<AuthMiddleware />}>
-            <Route
-              path='/home'
-              element={<HomeScreen />}
-            />
-            <Route
-              path='/workspace/new'
-              element={<WorkspaceNewScreen />}
-            />
+            <Route element={<MainLayout />}>
+              <Route
+                path='/home'
+                element={<HomeScreen />}
+              />
+              <Route
+                path='/workspace/new'
+                element={<WorkspaceNewScreen />}
+              />
+            </Route>
           </Route>
         </Routes>
       )}
