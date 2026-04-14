@@ -5,8 +5,10 @@ import { login } from '../../services/authService'
 import useRequest from '../../hooks/useRequest'
 import { AuthContext } from '../../Context/AuthContext'
 import TransitionOverlay from '../../Components/TransitionOverlay/TransitionOverlay'
+import { useLanguage } from '../../Context/LanguageContext'
 
 const LoginScreen = () => {
+    const { t } = useLanguage();
     const location = useLocation();
     const shouldTransition = location.state?.fromLanding;
     const [isTransitioning, setIsTransitioning] = useState(shouldTransition);
@@ -73,11 +75,11 @@ const LoginScreen = () => {
             {isTransitioning && <TransitionOverlay type="out" />}
             <div className="glass-card">
                 <h1 className="title">
-                    Iniciar sesión
+                    {t('login.title')}
                 </h1>
                 <form className="form" onSubmit={onSubmit}>
                     <div className="form-group">
-                        <label className="form-label" htmlFor="email">Email</label>
+                        <label className="form-label" htmlFor="email">{t('login.email')}</label>
                         <input
                             className="form-input"
                             type="email"
@@ -87,7 +89,7 @@ const LoginScreen = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label className="form-label" htmlFor="password">Password</label>
+                        <label className="form-label" htmlFor="password">{t('login.password')}</label>
                         <input
                             className="form-input"
                             type="password"
@@ -97,19 +99,19 @@ const LoginScreen = () => {
                         />
                     </div>
                     <button className="btn" type="submit" disabled={loading}>
-                        {loading ? 'Cargando...' : 'Iniciar sesión'}
+                        {loading ? t('login.loading') : t('login.submit')}
                     </button>
                 </form>
                 {response && !response.ok && (
                     <div className="error-text">
                         {response.message === 'Debes verificar tu correo electronico antes de iniciar sesion'
-                            ? 'Por favor, verifica tu correo'
+                            ? t('errors.must_verify')
                             : response.message}
                     </div>
                 )}
                 <div className="footer-links">
-                    <span>¿No tienes una cuenta? <Link className="link" to="/register">Registrarse</Link></span>
-                    <span>¿Olvidaste tu contraseña? <Link className="link" to="/reset-password-request">Restablecer</Link></span>
+                    <span>{t('login.no_account')} <Link className="link" to="/register">{t('login.register_link')}</Link></span>
+                    <span>{t('login.forgot_password')} <Link className="link" to="/reset-password-request">{t('login.reset_link')}</Link></span>
                 </div>
             </div>
         </div>

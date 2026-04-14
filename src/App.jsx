@@ -8,6 +8,7 @@ import LandingScreen from './Screens/LandingScreen/LandingScreen'
 import HomeScreen from './Screens/HomeScreen/HomeScreen'
 import WorkspaceNewScreen from './Screens/WorkspaceScreen/WorkspaceNewScreen'
 import LoadingScreen from './Components/LoadingScreen/LoadingScreen'
+import { LanguageProvider } from './Context/LanguageContext'
 
 
 const App = () => {
@@ -15,12 +16,16 @@ const App = () => {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    // Start exit animation after 2.5 seconds
+    // Theme initialization
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Start exit animation
     const exitTimer = setTimeout(() => {
       setIsExiting(true);
     }, 2500);
 
-    // Completely remove loading screen after 3 seconds
+    // Remove loading screen
     const finishTimer = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
@@ -31,30 +36,32 @@ const App = () => {
     };
   }, []);
 
-  if (isLoading) {
-    return <LoadingScreen isExiting={isExiting} />;
-  }
-
   return (
-    <Routes>
-      <Route path='/login' element={<LoginScreen />} />
-      <Route path='/register' element={<RegisterScreen />} />
-      <Route path='/' element={<LandingScreen />} />
-      <Route
-        path="/reset-password-request"
-        element={<ResetPasswordRequestScreen />}
-      />
-      <Route element={<AuthMiddleware />}>
-        <Route
-          path='/home'
-          element={<HomeScreen />}
-        />
-        <Route
-          path='/workspace/new'
-          element={<WorkspaceNewScreen />}
-        />
-      </Route>
-    </Routes>
+    <LanguageProvider>
+      {isLoading ? (
+        <LoadingScreen isExiting={isExiting} />
+      ) : (
+        <Routes>
+          <Route path='/login' element={<LoginScreen />} />
+          <Route path='/register' element={<RegisterScreen />} />
+          <Route path='/' element={<LandingScreen />} />
+          <Route
+            path="/reset-password-request"
+            element={<ResetPasswordRequestScreen />}
+          />
+          <Route element={<AuthMiddleware />}>
+            <Route
+              path='/home'
+              element={<HomeScreen />}
+            />
+            <Route
+              path='/workspace/new'
+              element={<WorkspaceNewScreen />}
+            />
+          </Route>
+        </Routes>
+      )}
+    </LanguageProvider>
   )
 }
 

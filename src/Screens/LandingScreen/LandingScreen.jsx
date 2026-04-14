@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import TransitionOverlay from '../../Components/TransitionOverlay/TransitionOverlay';
+import { useLanguage } from '../../Context/LanguageContext';
 import './LandingScreen.css';
 
 const LandingScreen = () => {
+    const { language, t, toggleLanguage } = useLanguage();
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const navigate = useNavigate();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const toggleTheme = () => {
+        const newTheme = theme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
     };
 
     const handleNavigation = (path) => {
@@ -44,19 +54,19 @@ const LandingScreen = () => {
                     <span className="brand-name">Cobalt</span>
                 </div>
                 <div className="header-nav">
-                    <button onClick={() => handleNavigation('/login')} className="btn btn-secondary nav-btn">Log in</button>
-                    <button onClick={() => handleNavigation('/register')} className="btn nav-btn">Sign up</button>
+                    <button onClick={() => handleNavigation('/login')} className="btn btn-secondary nav-btn">{t('landing.login')}</button>
+                    <button onClick={() => handleNavigation('/register')} className="btn nav-btn">{t('landing.signup')}</button>
                     <div className="menu-container">
                         <button className="menu-toggle-btn" onClick={toggleMenu}>
                             <i className="bi bi-list"></i>
                         </button>
                         {isMenuOpen && (
                             <div className="menu-dropdown">
-                                <button className="dropdown-item">
-                                    <i className="bi bi-translate"></i> Languages
+                                <button className="dropdown-item" onClick={() => toggleLanguage(language === 'en' ? 'es' : 'en')}>
+                                    <i className="bi bi-translate"></i> {language === 'en' ? 'Español' : 'English'}
                                 </button>
-                                <button className="dropdown-item">
-                                    <i className="bi bi-brightness-high"></i> Light theme
+                                <button className="dropdown-item" onClick={toggleTheme}>
+                                    <i className={`bi bi-${theme === 'dark' ? 'brightness-high' : 'moon-stars'}`}></i> {theme === 'dark' ? t('landing.menu.light_theme') : t('landing.menu.dark_theme')}
                                 </button>
                                 <a 
                                     href="https://github.com/XenoAzure" 
@@ -74,12 +84,12 @@ const LandingScreen = () => {
 
             <main className="landing-hero">
                 <div className="hero-content">
-                    <h1 className="hero-title">Communication systems for the modern age</h1>
+                    <h1 className="hero-title">{t('landing.title')}</h1>
                     <p className="hero-subtitle">
-                        Streamline your workflow and connect with your team in a workspace designed for clarity and speed.
+                        {t('landing.subtitle')}
                     </p>
                     <div className="hero-actions">
-                        <button onClick={() => handleNavigation('/register')} className="btn hero-btn">Get Started for Free</button>
+                        <button onClick={() => handleNavigation('/register')} className="btn hero-btn">{t('landing.cta')}</button>
                     </div>
                 </div>
                 <div className="hero-visual">
@@ -101,7 +111,7 @@ const LandingScreen = () => {
             </main>
 
             <footer className="landing-footer">
-                <p className="text-sm">© 2026 Cobalt Communication Systems. All rights reserved.</p>
+                <p className="text-sm">{t('landing.footer')}</p>
             </footer>
         </div>
     );

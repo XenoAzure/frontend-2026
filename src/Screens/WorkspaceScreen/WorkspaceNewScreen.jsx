@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router'
 import useForm from '../../hooks/useForm'
 import { createWorkspace } from '../../services/workspaceService'
 import useRequest from '../../hooks/useRequest'
+import { useLanguage } from '../../Context/LanguageContext'
 
 const WorkspaceNewScreen = () => {
-
+    const { t } = useLanguage();
     const navigate = useNavigate()
 
     const {
@@ -59,11 +60,11 @@ const WorkspaceNewScreen = () => {
         <div className="page-container">
             <div className="glass-card" style={{ maxWidth: '500px' }}>
                 <h1 className="title">
-                    Crear nuevo espacio
+                    {t('workspace.new.title')}
                 </h1>
                 <form className="form" onSubmit={onSubmit}>
                     <div className="form-group">
-                        <label className="form-label" htmlFor="title">Título</label>
+                        <label className="form-label" htmlFor="title">{t('workspace.new.label_title')}</label>
                         <input
                             className="form-input"
                             type="text"
@@ -75,7 +76,7 @@ const WorkspaceNewScreen = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label className="form-label" htmlFor="description">Descripción</label>
+                        <label className="form-label" htmlFor="description">{t('workspace.new.label_description')}</label>
                         <textarea
                             className="form-input form-textarea"
                             id="description"
@@ -86,7 +87,7 @@ const WorkspaceNewScreen = () => {
                     </div>
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                         <button className="btn" type="submit" disabled={loading} style={{ flex: 1 }}>
-                            {loading ? 'Creando...' : 'Crear'}
+                            {loading ? t('workspace.new.loading') : t('workspace.new.submit')}
                         </button>
                         <button 
                             type="button" 
@@ -94,7 +95,7 @@ const WorkspaceNewScreen = () => {
                             onClick={() => navigate('/home')}
                             style={{ flex: 1 }}
                         >
-                            Cancelar
+                            {t('workspace.new.cancel')}
                         </button>
                     </div>
                 </form>
