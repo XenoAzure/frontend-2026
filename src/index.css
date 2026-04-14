@@ -2,20 +2,14 @@
 
 :root {
   --bg-color: #0f172a;
-  /* Tailwind slate-900 */
   --primary-color: #6366f1;
-  /* Tailwind indigo-500 */
   --primary-hover: #4f46e5;
-  /* Tailwind indigo-600 */
   --secondary-color: #a855f7;
-  /* Tailwind purple-500 */
   --text-light: #f8fafc;
   --text-muted: #94a3b8;
   --bg-surface: rgba(30, 41, 59, 0.7);
-  /* Tailwind slate-800 translucent */
   --border-color: rgba(255, 255, 255, 0.1);
   --error-color: #ef4444;
-  /* Tailwind red-500 */
 }
 
 * {
@@ -73,12 +67,12 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
-  border-radius: 1.25rem;
+  border-radius: 0px;
   padding: 2.5rem;
   width: 100%;
   max-width: 420px;
   box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
-  animation: fadeInUp 0.6s ease-out forwards;
+  animation: fadeInUp 0.4s ease-out forwards;
 }
 
 .dashboard-card {
@@ -128,17 +122,17 @@ body {
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid var(--border-color);
   padding: 0.875rem 1.25rem;
-  border-radius: 0.75rem;
+  border-radius: 0px;
   color: var(--text-light);
   font-size: 1rem;
   outline: none;
   font-family: inherit;
-  transition: all 0.3s ease;
+  transition: all 0.15s ease;
 }
 
 .form-input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
   background: rgba(15, 23, 42, 0.8);
 }
 
@@ -152,22 +146,25 @@ body {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   color: white;
   border: none;
-  padding: 0.875rem;
-  border-radius: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   margin-top: 0.5rem;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   text-decoration: none;
+  line-height: 1;
 }
 
 .btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px -10px var(--secondary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px -5px var(--secondary-color);
 }
 
 .btn:disabled {
@@ -198,7 +195,6 @@ body {
 
 .link:hover {
   color: #c084fc;
-  /* Tailwind purple-400 */
 }
 
 .text-center {
@@ -259,8 +255,8 @@ body {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-color);
   padding: 1.5rem;
-  border-radius: 1rem;
-  transition: all 0.3s ease;
+  border-radius: 0px;
+  transition: all 0.15s ease;
 }
 
 .workspace-item:hover {
@@ -280,7 +276,7 @@ body {
   padding: 3rem;
   color: var(--text-muted);
   background: rgba(255, 255, 255, 0.02);
-  border-radius: 1rem;
+  border-radius: 0px;
   border: 1px dashed var(--border-color);
   margin-top: 2rem;
 }

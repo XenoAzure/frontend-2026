@@ -1,10 +1,23 @@
-import React, { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router'
+import React, { useEffect, useState } from 'react'
+import TransitionOverlay from '../../Components/TransitionOverlay/TransitionOverlay'
+import { Link, useNavigate, useLocation } from 'react-router'
 import useForm from '../../hooks/useForm'
 import useRequest from '../../hooks/useRequest'
 import { register } from '../../services/authService'
 
 const RegisterScreen = () => {
+    const location = useLocation();
+    const shouldTransition = location.state?.fromLanding;
+    const [isTransitioning, setIsTransitioning] = useState(shouldTransition);
+
+    useEffect(() => {
+        if (shouldTransition) {
+            const timer = setTimeout(() => {
+                setIsTransitioning(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [shouldTransition]);
 
     const {
         sendRequest,
@@ -63,6 +76,7 @@ const RegisterScreen = () => {
 
     return (
         <div className="page-container">
+            {isTransitioning && <TransitionOverlay type="out" />}
             <div className="glass-card">
                 <h1 className="title">
                     Registrarse

@@ -1,11 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import useForm from '../../hooks/useForm'
 import { login } from '../../services/authService'
 import useRequest from '../../hooks/useRequest'
 import { AuthContext } from '../../Context/AuthContext'
+import TransitionOverlay from '../../Components/TransitionOverlay/TransitionOverlay'
 
 const LoginScreen = () => {
+    const location = useLocation();
+    const shouldTransition = location.state?.fromLanding;
+    const [isTransitioning, setIsTransitioning] = useState(shouldTransition);
+
+    useEffect(() => {
+        if (shouldTransition) {
+            const timer = setTimeout(() => {
+                setIsTransitioning(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [shouldTransition]);
 
     const {
         sendRequest,
@@ -57,6 +70,7 @@ const LoginScreen = () => {
 
     return (
         <div className="page-container">
+            {isTransitioning && <TransitionOverlay type="out" />}
             <div className="glass-card">
                 <h1 className="title">
                     Iniciar sesión
