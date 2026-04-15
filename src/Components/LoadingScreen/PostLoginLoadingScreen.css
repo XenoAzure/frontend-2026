@@ -1,0 +1,268 @@
+.post-login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-color);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.post-login-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ========================================================= */
+/* CENTERED DELTA SYMBOL */
+/* ========================================================= */
+.delta-container {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.5s ease-in;
+}
+
+.huge-delta {
+    font-size: 15rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    text-shadow: 0 0 50px rgba(99, 102, 241, 0.8), 0 0 100px rgba(99, 102, 241, 0.5);
+    animation: deltaPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes deltaPulse {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.4));
+    }
+
+    100% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 60px rgba(99, 102, 241, 1));
+    }
+}
+
+.delta-container.zoom-in {
+    transform: scale(20);
+    opacity: 0;
+}
+
+/* ========================================================= */
+/* ANIMATED OCEAN WAVES */
+/* ========================================================= */
+.waves-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30vh;
+    z-index: 5;
+    overflow: hidden;
+    transition: transform 0.5s ease-in;
+}
+
+.waves-container.waves-exit {
+    transform: translateY(100%);
+}
+
+.wave {
+    position: absolute;
+    bottom: -10px;
+    /* Hide bottom gap */
+    width: 200%;
+    height: 100%;
+    animation: waveTranslate linear infinite;
+    transform-origin: bottom;
+}
+
+/* Speed and delay variances for depth */
+.wave-back {
+    animation-duration: 20s;
+    height: 120%;
+}
+
+.wave-mid {
+    animation-duration: 14s;
+    animation-direction: reverse;
+    height: 90%;
+}
+
+.wave-front {
+    animation-duration: 9s;
+    height: 60%;
+}
+
+@keyframes waveTranslate {
+    0% {
+        transform: translateX(0) scaleY(1);
+    }
+
+    50% {
+        transform: translateX(-25%) scaleY(1.1);
+    }
+
+    100% {
+        transform: translateX(-50%) scaleY(1);
+    }
+}
+
+/* ========================================================= */
+/* 3D FLOATING CUBES
+/* ========================================================= */
+.background-cubes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    perspective: 1000px;
+    opacity: 0.6;
+}
+
+.cube-wrapper {
+    position: absolute;
+    bottom: -150px;
+    transform-style: preserve-3d;
+    animation: loadingRise var(--rise-duration) linear infinite;
+    animation-delay: var(--rise-delay);
+}
+
+.cube {
+    width: var(--cube-size);
+    height: var(--cube-size);
+    position: relative;
+    transform-style: preserve-3d;
+    animation: loadingSpin var(--spin-duration) linear infinite;
+}
+
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--cube-bg);
+    border: 1px solid var(--cube-border);
+    backdrop-filter: blur(2px);
+}
+
+.front {
+    transform: rotateY(0deg) translateZ(calc(var(--cube-size) / 2));
+}
+
+.back {
+    transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2));
+}
+
+.left {
+    transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2));
+}
+
+.right {
+    transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2));
+}
+
+.top {
+    transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2));
+}
+
+.bottom {
+    transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2));
+}
+
+/* Cube Variations specifically for Loading Screen */
+.cube-1 {
+    left: 10%;
+    --cube-size: 60px;
+    --rise-duration: 10s;
+    --rise-delay: 0s;
+    --spin-duration: 5s;
+}
+
+.cube-2 {
+    left: 35%;
+    --cube-size: 100px;
+    --rise-duration: 12s;
+    --rise-delay: -2s;
+    --spin-duration: 7s;
+}
+
+.cube-3 {
+    left: 55%;
+    --cube-size: 80px;
+    --rise-duration: 9s;
+    --rise-delay: -4s;
+    --spin-duration: 6s;
+}
+
+.cube-4 {
+    left: 75%;
+    --cube-size: 120px;
+    --rise-duration: 14s;
+    --rise-delay: -6s;
+    --spin-duration: 8s;
+}
+
+.cube-5 {
+    left: 85%;
+    --cube-size: 70px;
+    --rise-duration: 11s;
+    --rise-delay: -1s;
+    --spin-duration: 5s;
+}
+
+.cube-6 {
+    left: 20%;
+    --cube-size: 90px;
+    --rise-duration: 13s;
+    --rise-delay: -8s;
+    --spin-duration: 9s;
+}
+
+@keyframes loadingRise {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.5;
+    }
+
+    90% {
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateY(-120vh);
+        opacity: 0;
+    }
+}
+
+@keyframes loadingSpin {
+    from {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+
+    to {
+        transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+    }
+}
+
+/* Light theme overrides */
+:root[data-theme='light'] .post-login-overlay {
+    background: #f8fafc;
+}
+
+:root[data-theme='light'] .face {
+    background: rgba(8, 145, 178, 0.12);
+    border-color: rgba(8, 145, 178, 0.55);
+}

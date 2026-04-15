@@ -7,14 +7,14 @@ export const AuthContext = createContext(
     {
         isLogged: false,
         user: null,
-        manageLogin: (auth_token) => {},
-        logout: () => {}
+        manageLogin: (auth_token) => { },
+        logout: () => { }
     }
 )
 
 export const LOCALSTORAGE_TOKEN_KEY = 'auth_token_slack'
 
-function AuthContextProvider ({children}){
+function AuthContextProvider({ children }) {
     const navigate = useNavigate()
     const [isLogged, setIsLogged] = useState(
         Boolean(
@@ -23,6 +23,7 @@ function AuthContextProvider ({children}){
     )
     const [user, setUser] = useState(null)
     const [isLoadingUser, setIsLoadingUser] = useState(true)
+    const [postLoginLoading, setPostLoginLoading] = useState(false);
 
     const fetchUserProfile = async (token) => {
         try {
@@ -35,7 +36,7 @@ function AuthContextProvider ({children}){
             if (data.ok) {
                 setUser(data.data.user);
             } else {
-                // If token is invalid according to backend, logout
+                // If token is invalid, logout
                 handleLogout();
             }
         } catch (error) {
@@ -72,10 +73,15 @@ function AuthContextProvider ({children}){
         }
     }, [isLogged]);
 
-    function manageLogin (auth_token){
+    function manageLogin(auth_token) {
         localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, auth_token)
         setIsLogged(true)
+        setPostLoginLoading(true)
         navigate('/home')
+    }
+
+    const finishPostLoginLoading = () => {
+        setPostLoginLoading(false);
     }
 
     const providerValues = {
@@ -83,7 +89,13 @@ function AuthContextProvider ({children}){
         user,
         isLoadingUser,
         manageLogin,
-        logout: handleLogout
+        logout: handleLogout,
+        postLoginLoading,
+        finishPostLoginLoading,
+        refreshUser: () => {
+            const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+            if (token) fetchUserProfile(token);
+        }
     }
 
     return (

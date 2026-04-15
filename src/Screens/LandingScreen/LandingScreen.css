@@ -7,6 +7,40 @@
     overflow-x: hidden;
 }
 
+/* Faint upward glow from the bottom of the page */
+.landing-page::before {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    height: 55vh;
+    background: radial-gradient(ellipse at 50% 100%,
+            hsl(210, 90%, 42%) 0%,
+            hsl(220, 80%, 30%) 25%,
+            transparent 70%);
+    opacity: 0.22;
+    z-index: 0;
+    pointer-events: none;
+    animation: glowPulse 6s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        opacity: 0.18;
+        transform: translateX(-50%) scaleX(1);
+    }
+
+    50% {
+        opacity: 0.28;
+        transform: translateX(-50%) scaleX(1.08);
+    }
+}
+
+
 /* 3D Background Cubes */
 .background-cubes {
     position: fixed;
@@ -146,6 +180,213 @@
     to {
         transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
     }
+}
+
+/* 3D Background Text Boxes */
+.background-text-boxes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    perspective: 1000px;
+    overflow: hidden;
+}
+
+.text-box-wrapper {
+    position: absolute;
+    bottom: -150px;
+    transform-style: preserve-3d;
+    animation: rise var(--rise-duration) linear infinite;
+    animation-delay: var(--rise-delay);
+}
+
+.text-box {
+    padding: 0.5rem 1.5rem;
+    border: 1px solid hsl(210, 85%, 68%);
+    background: var(--cube-bg);
+    backdrop-filter: blur(2px);
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--font-size, 1.2rem);
+    font-weight: 800;
+    color: hsl(210, 90%, 74%);
+    text-shadow:
+        0 0 6px hsl(210, 100%, 78%),
+        0 0 14px hsl(210, 100%, 65%),
+        0 0 28px hsl(210, 100%, 55%);
+    -webkit-text-stroke: 0px transparent;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    white-space: nowrap;
+    opacity: 0.7;
+    animation:
+        float 4s ease-in-out infinite var(--float-delay, 0s),
+        shake var(--shake-duration, 11s) ease-in-out infinite var(--shake-delay, 0s);
+}
+
+/* Box Variations */
+.box-1 {
+    left: 5%;
+    --rise-duration: 40s;
+    --rise-delay: -2s;
+    --font-size: 1.5rem;
+    --shake-duration: 13s;
+    --shake-delay: -1s;
+}
+
+.box-2 {
+    left: 20%;
+    --rise-duration: 55s;
+    --rise-delay: -15s;
+    --font-size: 1rem;
+    --shake-duration: 17s;
+    --shake-delay: -6s;
+}
+
+.box-3 {
+    left: 40%;
+    --rise-duration: 45s;
+    --rise-delay: -25s;
+    --font-size: 1.8rem;
+    --shake-duration: 11s;
+    --shake-delay: -3s;
+}
+
+.box-4 {
+    left: 60%;
+    --rise-duration: 50s;
+    --rise-delay: -10s;
+    --font-size: 1.2rem;
+    --shake-duration: 19s;
+    --shake-delay: -9s;
+}
+
+.box-5 {
+    left: 80%;
+    --rise-duration: 35s;
+    --rise-delay: -5s;
+    --font-size: 1.4rem;
+    --shake-duration: 14s;
+    --shake-delay: -2s;
+}
+
+.box-6 {
+    left: 90%;
+    --rise-duration: 60s;
+    --rise-delay: -30s;
+    --font-size: 0.9rem;
+    --shake-duration: 9s;
+    --shake-delay: -5s;
+}
+
+.box-7 {
+    left: 30%;
+    --rise-duration: 48s;
+    --rise-delay: -18s;
+    --font-size: 1.6rem;
+    --shake-duration: 16s;
+    --shake-delay: -7s;
+}
+
+.box-8 {
+    left: 15%;
+    --rise-duration: 52s;
+    --rise-delay: -7s;
+    --font-size: 1.3rem;
+    --shake-duration: 12s;
+    --shake-delay: -4s;
+}
+
+.box-9 {
+    left: 70%;
+    --rise-duration: 43s;
+    --rise-delay: -22s;
+    --font-size: 1.1rem;
+    --shake-duration: 18s;
+    --shake-delay: -11s;
+}
+
+.box-10 {
+    left: 50%;
+    --rise-duration: 38s;
+    --rise-delay: -35s;
+    --font-size: 1.7rem;
+    --shake-duration: 10s;
+    --shake-delay: -8s;
+}
+
+.box-11 {
+    left: 8%;
+    --rise-duration: 57s;
+    --rise-delay: -13s;
+    --font-size: 1.0rem;
+    --shake-duration: 15s;
+    --shake-delay: -0.5s;
+}
+
+.box-12 {
+    left: 35%;
+    --rise-duration: 44s;
+    --rise-delay: -40s;
+    --font-size: 1.4rem;
+    --shake-duration: 20s;
+    --shake-delay: -13s;
+}
+
+.box-13 {
+    left: 78%;
+    --rise-duration: 62s;
+    --rise-delay: -6s;
+    --font-size: 1.2rem;
+    --shake-duration: 11s;
+    --shake-delay: -6s;
+}
+
+.box-14 {
+    left: 55%;
+    --rise-duration: 36s;
+    --rise-delay: -28s;
+    --font-size: 0.85rem;
+    --shake-duration: 8s;
+    --shake-delay: -3s;
+}
+
+.box-15 {
+    left: 22%;
+    --rise-duration: 66s;
+    --rise-delay: -45s;
+    --font-size: 1.9rem;
+    --shake-duration: 17s;
+    --shake-delay: -10s;
+}
+
+.box-16 {
+    left: 88%;
+    --rise-duration: 41s;
+    --rise-delay: -3s;
+    --font-size: 1.1rem;
+    --shake-duration: 13s;
+    --shake-delay: -2s;
+}
+
+.box-17 {
+    left: 42%;
+    --rise-duration: 53s;
+    --rise-delay: -20s;
+    --font-size: 1.5rem;
+    --shake-duration: 19s;
+    --shake-delay: -14s;
+}
+
+.box-18 {
+    left: 63%;
+    --rise-duration: 47s;
+    --rise-delay: -33s;
+    --font-size: 1.3rem;
+    --shake-duration: 9s;
+    --shake-delay: -4s;
 }
 
 /* Header */
@@ -499,6 +740,66 @@
     100% {
         transform: translateY(0px);
     }
+}
+
+/* Occasional glitch-shake — movement is confined to the last ~8%
+   of the cycle so the box looks still most of the time. */
+@keyframes shake {
+
+    0%,
+    87% {
+        transform: rotate(0deg);
+    }
+
+    88% {
+        transform: rotate(-4deg);
+    }
+
+    89.5% {
+        transform: rotate(5deg);
+    }
+
+    91% {
+        transform: rotate(-4deg);
+    }
+
+    92.5% {
+        transform: rotate(3deg);
+    }
+
+    93.5% {
+        transform: rotate(-2deg);
+    }
+
+    94%,
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+/* Light Theme overrides for background decorations */
+:root[data-theme='light'] .face {
+    background: rgba(8, 145, 178, 0.12);
+    border-color: rgba(8, 145, 178, 0.55);
+}
+
+:root[data-theme='light'] .text-box {
+    color: hsl(190, 80%, 26%);
+    border-color: hsl(190, 75%, 36%);
+    background: rgba(8, 145, 178, 0.08);
+    text-shadow:
+        0 0 5px hsl(190, 80%, 48%),
+        0 0 12px hsl(190, 70%, 38%),
+        0 0 22px hsl(190, 60%, 30%);
+    opacity: 0.85;
+}
+
+:root[data-theme='light'] .landing-page::before {
+    background: radial-gradient(ellipse at 50% 100%,
+            hsl(190, 80%, 50%) 0%,
+            hsl(200, 70%, 40%) 25%,
+            transparent 70%);
+    opacity: 0.12;
 }
 
 /* Responsive */

@@ -1,42 +1,92 @@
-import React from 'react';
-import { MessageSquare, Hash, Settings, User as UserIcon } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MessageSquare, Hash, Settings, User as UserIcon, LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import ProfilePanel from '../ProfilePanel/ProfilePanel';
 
 const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleLogout = () => {
+        setIsMenuOpen(false);
+        logout();
+    };
+
+    const handleOpenProfile = () => {
+        setIsMenuOpen(false);
+        setIsProfileOpen(true);
+    };
 
     return (
-        <aside className="primary-sidebar">
-            <div className="sidebar-top">
-                <div 
-                    className={`sidebar-icon ${currentFilter === 'dms' ? 'active' : ''}`}
-                    onClick={() => onFilterChange(currentFilter === 'dms' ? null : 'dms')}
-                    title="Direct Messages"
-                >
-                    <MessageSquare size={24} />
+        <>
+            <aside className="primary-sidebar">
+                <div className="sidebar-top">
+                    <div 
+                        className={`sidebar-icon ${currentFilter === 'dms' ? 'active' : ''}`}
+                        onClick={() => onFilterChange(currentFilter === 'dms' ? null : 'dms')}
+                        title="Direct Messages"
+                    >
+                        <MessageSquare size={24} />
+                    </div>
+                    <div 
+                        className={`sidebar-icon ${currentFilter === 'workspaces' ? 'active' : ''}`}
+                        onClick={() => onFilterChange(currentFilter === 'workspaces' ? null : 'workspaces')}
+                        title="Workspaces"
+                    >
+                        <Hash size={24} />
+                    </div>
                 </div>
-                <div 
-                    className={`sidebar-icon ${currentFilter === 'workspaces' ? 'active' : ''}`}
-                    onClick={() => onFilterChange(currentFilter === 'workspaces' ? null : 'workspaces')}
-                    title="Workspaces"
-                >
-                    <Hash size={24} />
-                </div>
-            </div>
 
-            <div className="sidebar-bottom">
-                <div className="sidebar-icon" title="Settings">
-                    <Settings size={24} />
+                <div className="sidebar-bottom">
+                    <div className="sidebar-icon" title="Settings">
+                        <Settings size={24} />
+                    </div>
+                    <div className="profile-container" ref={menuRef}>
+                        <div 
+                            className={`sidebar-icon profile-pic ${isMenuOpen ? 'active' : ''}`} 
+                            title="Profile"
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        >
+                            {user?.profile_picture ? (
+                                <img src={user.profile_picture} alt={user.name} />
+                            ) : (
+                                <UserIcon size={24} />
+                            )}
+                        </div>
+
+                        {isMenuOpen && (
+                            <div className="profile-context-menu">
+                                <button className="menu-item" onClick={handleOpenProfile}>
+                                    <UserIcon size={18} />
+                                    <span>Profile</span>
+                                </button>
+                                <div className="menu-divider" />
+                                <button className="menu-item logout" onClick={handleLogout}>
+                                    <LogOut size={18} />
+                                    <span>Log out</span>
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <div className="sidebar-icon profile-pic" title="Profile">
-                    {user?.profile_picture ? (
-                        <img src={user.profile_picture} alt={user.name} />
-                    ) : (
-                        <UserIcon size={24} />
-                    )}
-                </div>
-            </div>
-        </aside>
+            </aside>
+
+            {isProfileOpen && (
+                <ProfilePanel onClose={() => setIsProfileOpen(false)} />
+            )}
+        </>
     );
 };
 

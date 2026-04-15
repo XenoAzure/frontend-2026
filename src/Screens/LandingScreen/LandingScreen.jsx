@@ -46,6 +46,14 @@ const LandingScreen = () => {
                 ))}
             </div>
 
+            <div className="background-text-boxes">
+                {['ADVENT', 'ASPECT', 'SHARP', 'NODDY', '@', 'KEEN', 'ADVANCE', '青い', 'X-AXIS', 'EMPRESS', 'NUMB', 'OPPOSE', 'VOCAL', 'ERGO', 'LABYRINTH', 'VOID', 'EXPRESS', 'TRAGEDY'].map((word, i) => (
+                    <div key={i} className={`text-box-wrapper box-${i + 1}`}>
+                        <div className="text-box">{word}</div>
+                    </div>
+                ))}
+            </div>
+
             {isTransitioning && <TransitionOverlay type="in" />}
 
             <header className="landing-header">
