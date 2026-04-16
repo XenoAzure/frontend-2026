@@ -8,7 +8,7 @@ const HomeScreen = () => {
 
  
     return (
-        <div className="dashboard-container dashboard-card">
+        <div className="dashboard-container dashboard-card" style={{ margin: '2rem' }}>
             <div className="header-actions">
                 <h1 className="dashboard-title">{t('home.title')}</h1>
                 <Link to='/workspace/new' className="btn">{t('home.new_workspace')}</Link>

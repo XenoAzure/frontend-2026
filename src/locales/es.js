@@ -26,6 +26,7 @@ export const es = {
         register_link: "Regístrate",
         forgot_password: "¿Olvidaste tu contraseña?",
         reset_link: "Restablecer",
+        remember_me: "Recordarme",
         error: {
             verify_email: "Por favor, verifica tu correo",
             generic: "Ocurrió un error al iniciar sesión"
@@ -64,6 +65,14 @@ export const es = {
         }
     },
     errors: {
-        must_verify: "Por favor, verifica tu correo electrónico antes de iniciar sesión"
+        must_verify: "Por favor verifique su correo antes de iniciar sesión"
+    },
+    reset_password: {
+        title: "Restablecer contraseña",
+        new_password: "Nueva contraseña",
+        submit: "Actualizar contraseña",
+        loading: "Actualizando...",
+        success: "¡Contraseña actualizada con éxito!",
+        redirect: "Redirigiendo al login en 3 segundos..."
     }
 };

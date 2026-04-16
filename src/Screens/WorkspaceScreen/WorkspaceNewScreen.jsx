@@ -57,7 +57,7 @@ const WorkspaceNewScreen = () => {
     )
 
     return (
-        <div className="page-container">
+        <div className="page-container" style={{ padding: '2rem' }}>
             <div className="glass-card" style={{ maxWidth: '500px' }}>
                 <h1 className="title">
                     {t('workspace.new.title')}

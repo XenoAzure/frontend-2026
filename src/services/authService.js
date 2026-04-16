@@ -83,3 +83,23 @@ export async function updateProfile(fields, token) {
     const response = await response_http.json();
     return response;
 }
+
+export async function resetPassword({ password, reset_token }) {
+    const response_http = await fetch(
+        `${ENVIRONMENT.API_URL}/api/auth/reset-password/${reset_token}`,
+        {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(
+                {
+                    password
+                }
+            )
+        }
+    )
+
+    const response = await response_http.json()
+    return response
+}

@@ -26,6 +26,7 @@ export const en = {
         register_link: "Sign up",
         forgot_password: "Forgot your password?",
         reset_link: "Reset",
+        remember_me: "Remember me",
         error: {
             verify_email: "Please verify your email",
             generic: "An error occurred during sign in"
@@ -65,5 +66,13 @@ export const en = {
     },
     errors: {
         must_verify: "Please verify your email before logging in"
+    },
+    reset_password: {
+        title: "Reset Password",
+        new_password: "New Password",
+        submit: "Update password",
+        loading: "Updating...",
+        success: "Password updated successfully!",
+        redirect: "Redirecting to login in 3 seconds..."
     }
 };

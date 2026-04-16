@@ -3,10 +3,12 @@ import { Route, Routes } from 'react-router'
 import LoginScreen from './Screens/LoginScreen/LoginScreen'
 import RegisterScreen from './Screens/RegisterScreen/RegisterScreen'
 import ResetPasswordRequestScreen from './Screens/ResetPasswordRequestScreen/ResetPasswordRequestScreen'
+import ResetPasswordScreen from './Screens/ResetPasswordScreen/ResetPasswordScreen'
 import AuthMiddleware from './Middlewares/AuthMiddleware'
 import LandingScreen from './Screens/LandingScreen/LandingScreen'
 import HomeScreen from './Screens/HomeScreen/HomeScreen'
 import WorkspaceNewScreen from './Screens/WorkspaceScreen/WorkspaceNewScreen'
+import DirectMessageScreen from './Screens/DirectMessageScreen/DirectMessageScreen'
 import LoadingScreen from './Components/LoadingScreen/LoadingScreen'
 import MainLayout from './Components/MainLayout/MainLayout'
 import { LanguageProvider } from './Context/LanguageContext'
@@ -50,6 +52,10 @@ const App = () => {
             path="/reset-password-request"
             element={<ResetPasswordRequestScreen />}
           />
+          <Route
+            path="/reset-password/:reset_token"
+            element={<ResetPasswordScreen />}
+          />
           <Route element={<AuthMiddleware />}>
             <Route element={<MainLayout />}>
               <Route
@@ -59,6 +65,10 @@ const App = () => {
               <Route
                 path='/workspace/new'
                 element={<WorkspaceNewScreen />}
+              />
+              <Route
+                path='/dm/:friend_id'
+                element={<DirectMessageScreen />}
               />
             </Route>
           </Route>

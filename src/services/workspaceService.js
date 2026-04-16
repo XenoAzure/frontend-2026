@@ -1,5 +1,5 @@
 import ENVIRONMENT from "../config/environment";
-import { LOCALSTORAGE_TOKEN_KEY } from "../Context/AuthContext";
+import { getToken } from "../Context/AuthContext";
 
 export async function getWorkspaces() {
     const response_http = await fetch(
@@ -7,7 +7,7 @@ export async function getWorkspaces() {
         {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
+                'Authorization': 'Bearer ' + getToken()
             }
         }
     )
@@ -23,7 +23,7 @@ export async function createWorkspace(workspace_data) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
+                'Authorization': 'Bearer ' + getToken()
             },
             body: JSON.stringify(workspace_data)
         }

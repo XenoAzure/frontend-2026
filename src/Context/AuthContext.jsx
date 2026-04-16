@@ -14,11 +14,15 @@ export const AuthContext = createContext(
 
 export const LOCALSTORAGE_TOKEN_KEY = 'auth_token_slack'
 
+export const getToken = () => {
+    return localStorage.getItem(LOCALSTORAGE_TOKEN_KEY) || sessionStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+};
+
 function AuthContextProvider({ children }) {
     const navigate = useNavigate()
     const [isLogged, setIsLogged] = useState(
         Boolean(
-            localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
+            getToken()
         )
     )
     const [user, setUser] = useState(null)
@@ -59,13 +63,14 @@ function AuthContextProvider({ children }) {
 
     const handleLogout = () => {
         localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
+        sessionStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
         setIsLogged(false);
         setUser(null);
         navigate('/login');
     }
 
     useEffect(() => {
-        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+        const token = getToken();
         if (token) {
             fetchUserProfile(token);
         } else {
@@ -73,8 +78,14 @@ function AuthContextProvider({ children }) {
         }
     }, [isLogged]);
 
-    function manageLogin(auth_token) {
-        localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, auth_token)
+    function manageLogin(auth_token, rememberMe = true) {
+        if (rememberMe) {
+            localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, auth_token);
+            sessionStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
+        } else {
+            sessionStorage.setItem(LOCALSTORAGE_TOKEN_KEY, auth_token);
+            localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
+        }
         setIsLogged(true)
         setPostLoginLoading(true)
         navigate('/home')
@@ -93,7 +104,7 @@ function AuthContextProvider({ children }) {
         postLoginLoading,
         finishPostLoginLoading,
         refreshUser: () => {
-            const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+            const token = getToken();
             if (token) fetchUserProfile(token);
         }
     }

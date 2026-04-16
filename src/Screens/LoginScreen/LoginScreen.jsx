@@ -12,6 +12,7 @@ const LoginScreen = () => {
     const location = useLocation();
     const shouldTransition = location.state?.fromLanding;
     const [isTransitioning, setIsTransitioning] = useState(shouldTransition);
+    const [rememberMe, setRememberMe] = useState(true);
 
     useEffect(() => {
         if (shouldTransition) {
@@ -64,7 +65,7 @@ const LoginScreen = () => {
     useEffect(
         () => {
             if (response && response.ok) {
-                manageLogin(response.data.auth_token)
+                manageLogin(response.data.auth_token, rememberMe)
             }
         },
         [response]
@@ -97,6 +98,18 @@ const LoginScreen = () => {
                             name={LOGIN_FORM_FIELDS.PASSWORD}
                             onChange={handleChangeInput}
                         />
+                    </div>
+                    <div className="form-group checkbox-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                            style={{ width: '16px', height: '16px', accentColor: 'var(--primary-color)', cursor: 'pointer' }}
+                        />
+                        <label htmlFor="rememberMe" className="form-label" style={{ cursor: 'pointer', margin: 0 }}>
+                            {t('login.remember_me') || 'Remember me'}
+                        </label>
                     </div>
                     <button className="btn" type="submit" disabled={loading}>
                         {loading ? t('login.loading') : t('login.submit')}

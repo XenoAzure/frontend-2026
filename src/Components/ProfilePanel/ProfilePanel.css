@@ -203,6 +203,51 @@
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
+.public-id-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem;
+    color: var(--primary-color);
+    font-family: 'Orbitron', inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+}
+
+.public-id-container:hover {
+    border-color: var(--primary-color);
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.public-id-text {
+    flex: 1;
+}
+
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.public-id-container:hover .copy-btn {
+    color: var(--text-light);
+}
+
+.text-success {
+    color: #10b981 !important;
+}
+
 .social-inputs {
     display: grid;
     grid-template-columns: 1fr 1fr;

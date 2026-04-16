@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import TransitionOverlay from '../../Components/TransitionOverlay/TransitionOverlay';
 import { useLanguage } from '../../Context/LanguageContext';
+import { useAuth } from '../../hooks/useAuth';
 import './LandingScreen.css';
 
 const LandingScreen = () => {
     const { language, t, toggleLanguage } = useLanguage();
+    const { isLogged } = useAuth();
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isLogged) {
+            navigate('/home');
+        }
+    }, [isLogged, navigate]);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);

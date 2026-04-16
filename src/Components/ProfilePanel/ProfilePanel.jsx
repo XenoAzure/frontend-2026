@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Camera, AtSign, Play, Code, Gamepad, Save, User, Loader } from 'lucide-react';
+import { X, Camera, AtSign, Play, Code, Gamepad, Save, User, Loader, Copy, Check } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { updateProfile } from '../../services/authService';
+import { getToken } from '../../Context/AuthContext';
 import './ProfilePanel.css';
 
 const ProfilePanel = ({ onClose }) => {
@@ -9,6 +10,7 @@ const ProfilePanel = ({ onClose }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [copied, setCopied] = useState(false);
     
     const [formData, setFormData] = useState({
         name: user?.name || '',
@@ -54,7 +56,7 @@ const ProfilePanel = ({ onClose }) => {
         setIsLoading(true);
 
         try {
-            const token = localStorage.getItem('auth_token_slack'); // From AuthContext LOCALSTORAGE_TOKEN_KEY
+            const token = getToken();
             const response = await updateProfile(formData, token);
             
             if (response.ok) {
@@ -113,6 +115,20 @@ const ProfilePanel = ({ onClose }) => {
                                 placeholder="Display name"
                                 required
                             />
+                        </div>
+
+                        <div className="field-group">
+                            <label>Public ID</label>
+                            <div className="public-id-container" onClick={() => {
+                                navigator.clipboard.writeText(user?.public_id || '');
+                                setCopied(true);
+                                setTimeout(() => setCopied(false), 2000);
+                            }}>
+                                <span className="public-id-text">{user?.public_id || 'Generating...'}</span>
+                                <button type="button" className="copy-btn">
+                                    {copied ? <Check size={16} className="text-success" /> : <Copy size={16} />}
+                                </button>
+                            </div>
                         </div>
 
                         <div className="field-group">
