@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, Hash, Settings, User as UserIcon, LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import ProfilePanel from '../ProfilePanel/ProfilePanel';
+import LogoutModal from './LogoutModal';
 
 const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
     const { user, logout } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
     const menuRef = useRef(null);
 
     useEffect(() => {
@@ -19,8 +21,13 @@ const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const handleLogout = () => {
+    const handleLogoutClick = () => {
         setIsMenuOpen(false);
+        setIsLogoutModalOpen(true);
+    };
+
+    const handleConfirmLogout = () => {
+        setIsLogoutModalOpen(false);
         logout();
     };
 
@@ -73,7 +80,7 @@ const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
                                     <span>Profile</span>
                                 </button>
                                 <div className="menu-divider" />
-                                <button className="menu-item logout" onClick={handleLogout}>
+                                <button className="menu-item logout" onClick={handleLogoutClick}>
                                     <LogOut size={18} />
                                     <span>Log out</span>
                                 </button>
@@ -85,6 +92,13 @@ const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
 
             {isProfileOpen && (
                 <ProfilePanel onClose={() => setIsProfileOpen(false)} />
+            )}
+
+            {isLogoutModalOpen && (
+                <LogoutModal 
+                    onConfirm={handleConfirmLogout} 
+                    onCancel={() => setIsLogoutModalOpen(false)} 
+                />
             )}
         </>
     );

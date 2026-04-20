@@ -1,12 +1,19 @@
-import { User as UserIcon, LogOut } from 'lucide-react';
+import { User as UserIcon, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
-const Header = () => {
+const Header = ({ onToggleSecondary }) => {
     const { user, logout } = useAuth();
 
     return (
         <header className="header">
             <div className="header-left">
+                <button 
+                    className="mobile-menu-toggle" 
+                    onClick={onToggleSecondary}
+                    title="Toggle Menu"
+                >
+                    <Menu size={24} />
+                </button>
                 <div className="header-brand">
                     <span className="header-delta">Δ</span>
                     <span className="header-cobalt">Cobalt</span>
@@ -22,14 +29,6 @@ const Header = () => {
                         <UserIcon size={20} />
                     )}
                 </div>
-                <button 
-                    onClick={logout}
-                    className="btn btn-secondary" 
-                    style={{ padding: '0.4rem', marginLeft: '0.5rem', marginTop: 0 }}
-                    title="Logout"
-                >
-                    <LogOut size={18} />
-                </button>
             </div>
         </header>
     );

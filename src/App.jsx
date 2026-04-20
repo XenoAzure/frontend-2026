@@ -8,6 +8,7 @@ import AuthMiddleware from './Middlewares/AuthMiddleware'
 import LandingScreen from './Screens/LandingScreen/LandingScreen'
 import HomeScreen from './Screens/HomeScreen/HomeScreen'
 import WorkspaceNewScreen from './Screens/WorkspaceScreen/WorkspaceNewScreen'
+import WorkspaceScreen from './Screens/WorkspaceScreen/WorkspaceScreen'
 import DirectMessageScreen from './Screens/DirectMessageScreen/DirectMessageScreen'
 import LoadingScreen from './Components/LoadingScreen/LoadingScreen'
 import MainLayout from './Components/MainLayout/MainLayout'
@@ -65,6 +66,10 @@ const App = () => {
               <Route
                 path='/workspace/new'
                 element={<WorkspaceNewScreen />}
+              />
+              <Route
+                path='/workspace/:workspace_id'
+                element={<WorkspaceScreen />}
               />
               <Route
                 path='/dm/:friend_id'

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, Hash, User, UserPlus, VolumeX, Trash2, Check, X, Ban } from 'lucide-react';
+import { Search, Hash, User, UserPlus, MoreVertical, VolumeX, Trash2, Check, X, Ban, User as UserIcon, LogOut, CheckSquare } from 'lucide-react';
 import useWorkspaces from '../../hooks/useWorkspaces';
 import { useAuth } from '../../hooks/useAuth';
 import ENVIRONMENT from '../../config/environment';
 import { getToken } from '../../Context/AuthContext';
+import FriendProfileModal from './FriendProfileModal';
+import InviteWorkspaceModal from './InviteWorkspaceModal';
 
 const SecondarySidebar = ({ currentFilter }) => {
     const { workspaces, loading, loadWorkspaces } = useWorkspaces();
@@ -13,9 +15,30 @@ const SecondarySidebar = ({ currentFilter }) => {
     const [isAddingFriend, setIsAddingFriend] = useState(false);
     const [friendId, setFriendId] = useState('');
     const [actionLoading, setActionLoading] = useState(false);
+    
+    // UI states
+    const [activeContextMenu, setActiveContextMenu] = useState(null);
+    const [selectedFriendProfile, setSelectedFriendProfile] = useState(null);
+    const [inviteWorkspaceId, setInviteWorkspaceId] = useState(null);
+    
+    const menuRef = useRef(null);
     const navigate = useNavigate();
-
     const token = getToken();
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setActiveContextMenu(null);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const toggleContextMenu = (id, e) => {
+        e.stopPropagation();
+        setActiveContextMenu(prev => prev === id ? null : id);
+    };
 
     const handleAddFriend = async (e) => {
         e.preventDefault();
@@ -43,8 +66,9 @@ const SecondarySidebar = ({ currentFilter }) => {
     };
 
     const handleRemoveFriend = async (id, e) => {
-        e.stopPropagation();
-        if (!confirm('¿Eliminar amigo?')) return;
+        e?.stopPropagation();
+        setActiveContextMenu(null);
+        if (!confirm('Are you sure you want to delete this friend?')) return;
         try {
             const response = await fetch(`${ENVIRONMENT.API_URL}/api/user/friends/${id}`, {
                 method: 'DELETE',
@@ -55,7 +79,8 @@ const SecondarySidebar = ({ currentFilter }) => {
     };
 
     const handleMuteFriend = async (id, e) => {
-        e.stopPropagation();
+        e?.stopPropagation();
+        setActiveContextMenu(null);
         try {
             const response = await fetch(`${ENVIRONMENT.API_URL}/api/user/friends/${id}/mute`, {
                 method: 'PATCH',
@@ -65,8 +90,15 @@ const SecondarySidebar = ({ currentFilter }) => {
         } catch (error) { console.error(error); }
     };
 
+    const handleBlockFriend = async (id, e) => {
+        e?.stopPropagation();
+        setActiveContextMenu(null);
+        handleFriendRequest(id, 'block');
+    };
+
     const handleDeleteWorkspace = async (id, e) => {
-        e.stopPropagation();
+        e?.stopPropagation();
+        setActiveContextMenu(null);
         if (!confirm('¿Eliminar workspace? Solo aplicable si eres OWNER.')) return;
         try {
             const response = await fetch(`${ENVIRONMENT.API_URL}/api/workspace/${id}`, {
@@ -78,7 +110,8 @@ const SecondarySidebar = ({ currentFilter }) => {
     };
 
     const handleMuteWorkspace = async (id, e) => {
-        e.stopPropagation();
+        e?.stopPropagation();
+        setActiveContextMenu(null);
         try {
             const response = await fetch(`${ENVIRONMENT.API_URL}/api/user/workspaces/${id}/mute`, {
                 method: 'PATCH',
@@ -89,7 +122,6 @@ const SecondarySidebar = ({ currentFilter }) => {
     };
 
     const handleFriendRequest = async (id, action) => {
-        // action can be: 'accept', 'decline', 'block'
         try {
             const response = await fetch(`${ENVIRONMENT.API_URL}/api/user/friends/requests/${id}/${action}`, {
                 method: 'POST',
@@ -100,112 +132,170 @@ const SecondarySidebar = ({ currentFilter }) => {
     };
 
     const filteredItems = [
-        ...(currentFilter === 'workspaces' || !currentFilter ? (workspaces || []).map(w => ({ ...w, type: 'workspace', id: w.workspace_id, name: w.workspace_title })) : []),
+        ...(currentFilter === 'workspaces' || !currentFilter ? (workspaces || []).map(w => ({ ...w, type: 'workspace', id: w.workspace_id, name: w.workspace_title, role: w.member_role })) : []),
         ...(currentFilter === 'dms' || !currentFilter ? (user?.friends || []).map(f => ({ ...f, type: 'user', id: f._id })) : [])
     ].filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
-        <aside className="secondary-sidebar">
-            <div className="background-text-boxes-sidebar">
-                {['SHARP', 'NODDY', '青い', 'X-AXIS', 'VOID', 'OPPOSE'].map((word, i) => (
-                    <div key={i} className={`text-box-wrapper sb-box-${i + 1}`}>
-                        <div className="text-box">{word}</div>
-                    </div>
-                ))}
-            </div>
-            <div className="search-container">
-                <div className="search-box">
-                    <Search size={18} className="text-muted" />
-                    <input 
-                        type="text" 
-                        placeholder="Search..." 
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+        <>
+            <aside className="secondary-sidebar">
+                <div className="background-text-boxes-sidebar">
+                    {['SHARP', 'NODDY', '青い', 'X-AXIS', 'VOID', 'OPPOSE'].map((word, i) => (
+                        <div key={i} className={`text-box-wrapper sb-box-${i + 1}`}>
+                            <div className="text-box">{word}</div>
+                        </div>
+                    ))}
                 </div>
-                
-                <button 
-                    className="add-friend-btn" 
-                    onClick={() => setIsAddingFriend(!isAddingFriend)}
-                >
-                    <UserPlus size={16} /> Add Friend
-                </button>
-                
-                {isAddingFriend && (
-                    <form className="add-friend-form" onSubmit={handleAddFriend}>
+                <div className="search-container">
+                    <div className="search-box">
+                        <Search size={18} className="text-muted" />
                         <input 
                             type="text" 
-                            placeholder="Friend's Public ID" 
-                            value={friendId}
-                            onChange={(e) => setFriendId(e.target.value)}
-                            disabled={actionLoading}
-                            autoFocus
+                            placeholder="Search..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <button type="submit" disabled={actionLoading || !friendId.trim()}>
-                            Add
-                        </button>
-                    </form>
-                )}
-                
-                {user?.pending_requests?.length > 0 && (
-                    <div className="pending-requests-panel">
-                        <div className="pr-header">Solicitudes ({user.pending_requests.length})</div>
-                        {user.pending_requests.map(req => (
-                            <div key={req._id} className="pr-item">
-                                <span className="pr-name">{req.name}</span>
-                                <div className="pr-actions">
-                                    <button onClick={() => handleFriendRequest(req._id, 'accept')} title="Accept" className="pr-btn accept"><Check size={14}/></button>
-                                    <button onClick={() => handleFriendRequest(req._id, 'decline')} title="Decline" className="pr-btn decline"><X size={14}/></button>
-                                    <button onClick={() => handleFriendRequest(req._id, 'block')} title="Block" className="pr-btn block"><Ban size={14}/></button>
-                                </div>
-                            </div>
-                        ))}
                     </div>
-                )}
-            </div>
-
-            <div className="sidebar-list">
-                {loading ? (
-                    <div className="text-center p-4 text-muted">Loading...</div>
-                ) : (
-                    filteredItems.map((item) => (
-                        <div 
-                            key={`${item.type}-${item.id}`} 
-                            className="list-item"
-                            onClick={() => navigate(item.type === 'workspace' ? `/workspace/${item.id}` : `/dm/${item.id}`)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <div className="item-avatar">
-                                {item.type === 'workspace' ? <Hash size={16} /> : <User size={16} />}
-                            </div>
-                            <span className="item-name">{item.name}</span>
-                            
-                            <div className="item-actions">
-                                <button 
-                                    className={`action-btn ${item.type === 'workspace' ? 
-                                        (user?.muted_workspaces?.includes(item.id) ? 'muted' : '') : 
-                                        (user?.muted_friends?.includes(item.id) ? 'muted' : '')}`}
-                                    onClick={(e) => item.type === 'workspace' ? handleMuteWorkspace(item.id, e) : handleMuteFriend(item.id, e)}
-                                    title="Mute"
-                                >
-                                    <VolumeX size={14} />
-                                </button>
-                                <button 
-                                    className="action-btn delete"
-                                    onClick={(e) => item.type === 'workspace' ? handleDeleteWorkspace(item.id, e) : handleRemoveFriend(item.id, e)}
-                                    title="Delete"
-                                >
-                                    <Trash2 size={14} />
-                                </button>
-                            </div>
+                    
+                    <button 
+                        className="add-friend-btn" 
+                        onClick={() => setIsAddingFriend(!isAddingFriend)}
+                    >
+                        <UserPlus size={16} /> Add Friend
+                    </button>
+                    
+                    {isAddingFriend && (
+                        <form className="add-friend-form" onSubmit={handleAddFriend}>
+                            <input 
+                                type="text" 
+                                placeholder="Friend's Public ID" 
+                                value={friendId}
+                                onChange={(e) => setFriendId(e.target.value)}
+                                disabled={actionLoading}
+                                autoFocus
+                            />
+                            <button type="submit" disabled={actionLoading || !friendId.trim()}>
+                                Add
+                            </button>
+                        </form>
+                    )}
+                    
+                    {user?.pending_requests?.length > 0 && (
+                        <div className="pending-requests-panel">
+                            <div className="pr-header">Solicitudes ({user.pending_requests.length})</div>
+                            {user.pending_requests.map(req => (
+                                <div key={req._id} className="pr-item">
+                                    <span className="pr-name">{req.name}</span>
+                                    <div className="pr-actions">
+                                        <button onClick={() => handleFriendRequest(req._id, 'accept')} title="Accept" className="pr-btn accept"><Check size={14}/></button>
+                                        <button onClick={() => handleFriendRequest(req._id, 'decline')} title="Decline" className="pr-btn decline"><X size={14}/></button>
+                                        <button onClick={() => handleFriendRequest(req._id, 'block')} title="Block" className="pr-btn block"><Ban size={14}/></button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))
-                )}
-                {!loading && filteredItems.length === 0 && (
-                    <div className="text-center p-4 text-muted">No results found</div>
-                )}
-            </div>
-        </aside>
+                    )}
+                </div>
+
+                <div className="sidebar-list" ref={menuRef}>
+                    {loading ? (
+                        <div className="text-center p-4 text-muted">Loading...</div>
+                    ) : (
+                        filteredItems.map((item) => {
+                            const isWorkspace = item.type === 'workspace';
+                            const isMenuOpen = activeContextMenu === item.id;
+                            
+                            return (
+                                <div 
+                                    key={`${item.type}-${item.id}`} 
+                                    className="list-item"
+                                    onClick={() => navigate(isWorkspace ? `/workspace/${item.id}` : `/dm/${item.id}`)}
+                                    style={{ cursor: 'pointer', position: 'relative' }}
+                                >
+                                    <div className="item-avatar">
+                                        {isWorkspace ? <Hash size={16} /> : <User size={16} />}
+                                    </div>
+                                    <span className="item-name">{item.name}</span>
+                                    
+                                    <div className="item-actions">
+                                        <button 
+                                            className="action-btn"
+                                            onClick={(e) => toggleContextMenu(item.id, e)}
+                                            title="Options"
+                                        >
+                                            <MoreVertical size={16} />
+                                        </button>
+                                    </div>
+
+                                    {isMenuOpen && (
+                                        <div className="item-context-menu" onClick={(e) => e.stopPropagation()}>
+                                            {isWorkspace ? (
+                                                <>
+                                                    <button className="menu-item" onClick={() => { setActiveContextMenu(null); navigate(`/workspace/${item.id}`); }}>
+                                                        <Hash size={16} /> Open workspace
+                                                    </button>
+                                                    <button className="menu-item" onClick={() => { setActiveContextMenu(null); setInviteWorkspaceId(item.id); }}>
+                                                        <UserPlus size={16} /> Add friend to workspace
+                                                    </button>
+                                                    <button className="menu-item" onClick={(e) => handleMuteWorkspace(item.id, e)}>
+                                                        <VolumeX size={16} /> {user?.muted_workspaces?.includes(item.id) ? 'Unmute workspace' : 'Mute workspace'}
+                                                    </button>
+                                                    {(item.role?.toLowerCase() === 'owner') && (
+                                                        <>
+                                                            <div className="menu-divider" />
+                                                            <button className="menu-item delete" onClick={(e) => handleDeleteWorkspace(item.id, e)}>
+                                                                <Trash2 size={16} /> Delete workspace
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button className="menu-item" onClick={() => { setActiveContextMenu(null); setSelectedFriendProfile(item); }}>
+                                                        <UserIcon size={16} /> View Profile
+                                                    </button>
+                                                    <button className="menu-item" onClick={(e) => handleMuteFriend(item.id, e)}>
+                                                        <VolumeX size={16} /> {user?.muted_friends?.includes(item.id) ? 'Unmute friend' : 'Mute friend'}
+                                                    </button>
+                                                    <button className="menu-item" onClick={() => setActiveContextMenu(null)}>
+                                                        <CheckSquare size={16} /> Mark as read
+                                                    </button>
+                                                    <div className="menu-divider" />
+                                                    <button className="menu-item delete" onClick={(e) => handleBlockFriend(item.id, e)}>
+                                                        <Ban size={16} /> Block friend
+                                                    </button>
+                                                    <button className="menu-item delete" onClick={(e) => handleRemoveFriend(item.id, e)}>
+                                                        <Trash2 size={16} /> Delete friend
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
+                    )}
+                    {!loading && filteredItems.length === 0 && (
+                        <div className="text-center p-4 text-muted">No results found</div>
+                    )}
+                </div>
+            </aside>
+
+            {selectedFriendProfile && (
+                <FriendProfileModal 
+                    friend={selectedFriendProfile} 
+                    onClose={() => setSelectedFriendProfile(null)} 
+                />
+            )}
+
+            {inviteWorkspaceId && (
+                <InviteWorkspaceModal 
+                    workspace_id={inviteWorkspaceId} 
+                    onClose={() => setInviteWorkspaceId(null)}
+                    onSuccess={() => {}}
+                />
+            )}
+        </>
     );
 };
 

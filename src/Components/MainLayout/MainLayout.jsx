@@ -9,17 +9,38 @@ import './MainLayout.css';
 
 const MainLayout = () => {
     const [currentFilter, setCurrentFilter] = useState(null);
+    const [showSecondaryMobile, setShowSecondaryMobile] = useState(false);
     const { postLoginLoading, finishPostLoginLoading } = useAuth();
+
+    const handleToggleSecondary = () => {
+        setShowSecondaryMobile(prev => !prev);
+    };
+
+    const handleCloseSecondary = () => {
+        setShowSecondaryMobile(false);
+    };
+
+    // When a filter button is tapped on mobile, open the drawer automatically
+    const handleFilterChange = (filter) => {
+        setCurrentFilter(filter);
+        if (filter !== null) {
+            setShowSecondaryMobile(true);
+        }
+    };
 
     return (
         <div className="main-layout">
             {postLoginLoading && <PostLoginLoadingScreen onFinished={finishPostLoginLoading} />}
-            <Header />
-            <div className="layout-body">
+            <Header onToggleSecondary={handleToggleSecondary} />
+            <div className={`layout-body ${showSecondaryMobile ? 'secondary-open' : ''}`}>
                 <PrimarySidebar 
                     currentFilter={currentFilter} 
-                    onFilterChange={setCurrentFilter} 
+                    onFilterChange={handleFilterChange} 
                 />
+                
+                {showSecondaryMobile && (
+                    <div className="mobile-overlay" onClick={handleCloseSecondary}></div>
+                )}
                 
                 <SecondarySidebar 
                     currentFilter={currentFilter} 
@@ -36,3 +57,4 @@ const MainLayout = () => {
 };
 
 export default MainLayout;
+
