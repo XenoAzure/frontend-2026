@@ -48,7 +48,7 @@ const MainLayout = () => {
 
                 <main className="main-content">
                     <div className="content-body">
-                        <Outlet />
+                        <Outlet context={{ currentFilter }} />
                     </div>
                 </main>
             </div>

@@ -11,6 +11,7 @@ const RegisterScreen = () => {
     const location = useLocation();
     const shouldTransition = location.state?.fromLanding;
     const [isTransitioning, setIsTransitioning] = useState(shouldTransition);
+    const [successMessage, setSuccessMessage] = useState(false);
 
     useEffect(() => {
         if (shouldTransition) {
@@ -69,11 +70,13 @@ const RegisterScreen = () => {
     useEffect (
         () => {
             if(response && response.ok){
-                alert(t('register.success'))
-                navigate('/login')
+                setSuccessMessage(true)
+                setTimeout(() => {
+                    navigate('/login')
+                }, 3000)
             }
         },
-        [response, t]
+        [response, navigate]
     )
 
     return (
@@ -96,10 +99,15 @@ const RegisterScreen = () => {
                         <label className="form-label" htmlFor="password">{t('register.password')}</label>
                         <input className="form-input" type="password" id="password" name={REGISTER_FORM_FIELDS.PASSWORD} onChange={handleChangeInput} value={formState[REGISTER_FORM_FIELDS.PASSWORD]} />
                     </div>
-                    <button className="btn" type="submit" disabled={loading}>{loading ? t('register.loading') : t('register.submit')}</button>
-                    {error && (
+                    <button className="btn" type="submit" disabled={loading || successMessage}>{loading ? t('register.loading') : t('register.submit')}</button>
+                    {error && !successMessage && (
                         <div className="error-text">
                             {error.message || t('register.error')}
+                        </div>
+                    )}
+                    {successMessage && (
+                        <div className="success-text">
+                            {t('register.success')}
                         </div>
                     )}
                 </form>

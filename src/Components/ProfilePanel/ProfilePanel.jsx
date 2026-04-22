@@ -3,9 +3,11 @@ import { X, Camera, AtSign, Play, Code, Gamepad, Save, User, Loader, Copy, Check
 import { useAuth } from '../../hooks/useAuth';
 import { updateProfile } from '../../services/authService';
 import { getToken } from '../../Context/AuthContext';
+import { useLanguage } from '../../Context/LanguageContext';
 import './ProfilePanel.css';
 
 const ProfilePanel = ({ onClose }) => {
+    const { t } = useLanguage();
     const { user, refreshUser } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -28,7 +30,7 @@ const ProfilePanel = ({ onClose }) => {
         const file = e.target.files[0];
         if (file) {
             if (file.size > 2 * 1024 * 1024) {
-                setError('La imagen es demasiado grande (máximo 2MB)');
+                setError(t('profile.img_too_large'));
                 return;
             }
             const reader = new FileReader();
@@ -60,14 +62,14 @@ const ProfilePanel = ({ onClose }) => {
             const response = await updateProfile(formData, token);
             
             if (response.ok) {
-                setSuccess('Perfil actualizado exitosamente');
+                setSuccess(t('profile.update_success'));
                 refreshUser();
                 setTimeout(() => onClose(), 1500);
             } else {
-                setError(response.message || 'Error al actualizar el perfil');
+                setError(response.message || t('profile.update_err'));
             }
         } catch (err) {
-            setError('Error de conexión con el servidor');
+            setError(t('profile.connection_err'));
         } finally {
             setIsLoading(false);
         }
@@ -77,7 +79,7 @@ const ProfilePanel = ({ onClose }) => {
         <div className="profile-overlay" onClick={onClose}>
             <div className="profile-panel" onClick={(e) => e.stopPropagation()}>
                 <header className="panel-header">
-                    <h2>Edit Profile</h2>
+                    <h2>{t('profile.title')}</h2>
                     <button className="close-btn" onClick={onClose}>
                         <X size={24} />
                     </button>
@@ -107,24 +109,24 @@ const ProfilePanel = ({ onClose }) => {
 
                     <section className="profile-section">
                         <div className="field-group">
-                            <label>Username</label>
+                            <label>{t('profile.username')}</label>
                             <input 
                                 type="text" 
                                 value={formData.name} 
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                placeholder="Display name"
+                                placeholder={t('profile.display_name')}
                                 required
                             />
                         </div>
 
                         <div className="field-group">
-                            <label>Public ID</label>
+                            <label>{t('profile.public_id')}</label>
                             <div className="public-id-container" onClick={() => {
                                 navigator.clipboard.writeText(user?.public_id || '');
                                 setCopied(true);
                                 setTimeout(() => setCopied(false), 2000);
                             }}>
-                                <span className="public-id-text">{user?.public_id || 'Generating...'}</span>
+                                <span className="public-id-text">{user?.public_id || t('profile.generating')}</span>
                                 <button type="button" className="copy-btn">
                                     {copied ? <Check size={16} className="text-success" /> : <Copy size={16} />}
                                 </button>
@@ -133,7 +135,7 @@ const ProfilePanel = ({ onClose }) => {
 
                         <div className="field-group">
                             <div className="label-with-counter">
-                                <label>Bio</label>
+                                <label>{t('profile.bio')}</label>
                                 <span className={`char-counter ${formData.bio.length > 300 ? 'error' : ''}`}>
                                     {formData.bio.length}/300
                                 </span>
@@ -141,14 +143,14 @@ const ProfilePanel = ({ onClose }) => {
                             <textarea 
                                 value={formData.bio}
                                 onChange={(e) => setFormData({ ...formData, bio: e.target.value.slice(0, 300) })}
-                                placeholder="Tell us about yourself..."
+                                placeholder={t('profile.bio_placeholder')}
                                 rows="4"
                             />
                         </div>
                     </section>
 
                     <section className="profile-section">
-                        <h3>Connections</h3>
+                        <h3>{t('profile.connections')}</h3>
                         <div className="social-inputs">
                             <div className="social-field">
                                 <AtSign className="icon twitter" size={20} />
@@ -194,11 +196,11 @@ const ProfilePanel = ({ onClose }) => {
 
                     <footer className="panel-footer">
                         <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isLoading}>
-                            Cancel
+                            {t('profile.cancel')}
                         </button>
                         <button type="submit" className="btn btn-save" disabled={isLoading || formData.bio.length > 300}>
                             {isLoading ? <Loader className="animate-spin" size={20} /> : <Save size={20} />}
-                            Save Changes
+                            {t('profile.save_changes')}
                         </button>
                     </footer>
                 </form>

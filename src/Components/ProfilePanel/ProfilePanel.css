@@ -20,7 +20,7 @@
     background: var(--glass-bg);
     backdrop-filter: blur(25px);
     border: 1px solid var(--border-color);
-    border-radius: 16px;
+    border-radius: 0px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -59,6 +59,7 @@
 }
 
 .panel-header h2 {
+    font-family: 'Orbitron', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     background: linear-gradient(135deg, var(--title-grad-start) 0%, var(--title-grad-end) 100%);
@@ -97,6 +98,7 @@
 }
 
 .profile-section h3 {
+    font-family: 'Orbitron', sans-serif;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -120,7 +122,7 @@
 .avatar-placeholder {
     width: 100%;
     height: 100%;
-    border-radius: 20px;
+    border-radius: 0px;
     object-fit: cover;
     background: var(--bg-surface);
 }
@@ -141,7 +143,7 @@
     height: 40px;
     background: var(--primary-color);
     color: white;
-    border-radius: 12px;
+    border-radius: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -199,7 +201,7 @@
 .field-group textarea {
     background: rgba(15, 23, 42, 0.4);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 0px;
     padding: 1rem;
     color: var(--text-light);
     font-family: inherit;
@@ -221,7 +223,7 @@
     align-items: center;
     background: rgba(15, 23, 42, 0.4);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 0px;
     padding: 1rem;
     color: var(--primary-color);
     font-family: 'Orbitron', inherit;
@@ -277,7 +279,7 @@
     align-items: center;
     background: rgba(15, 23, 42, 0.3);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 0px;
     padding: 0.25rem 0.75rem;
     transition: all 0.2s;
 }
@@ -322,7 +324,7 @@
     background: rgba(239, 68, 68, 0.1);
     color: var(--error-color);
     padding: 1rem;
-    border-radius: 10px;
+    border-radius: 0px;
     border: 1px solid rgba(239, 68, 68, 0.2);
     font-size: 0.9rem;
 }
@@ -331,7 +333,7 @@
     background: rgba(16, 185, 129, 0.1);
     color: #10b981;
     padding: 1rem;
-    border-radius: 10px;
+    border-radius: 0px;
     border: 1px solid rgba(16, 185, 129, 0.2);
     font-size: 0.9rem;
 }

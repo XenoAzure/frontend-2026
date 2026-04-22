@@ -7,8 +7,10 @@ import ENVIRONMENT from '../../config/environment';
 import { getToken } from '../../Context/AuthContext';
 import FriendProfileModal from './FriendProfileModal';
 import InviteWorkspaceModal from './InviteWorkspaceModal';
+import { useLanguage } from '../../Context/LanguageContext';
 
 const SecondarySidebar = ({ currentFilter }) => {
+    const { t } = useLanguage();
     const { workspaces, loading, loadWorkspaces } = useWorkspaces();
     const { user, refreshUser } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
@@ -151,7 +153,7 @@ const SecondarySidebar = ({ currentFilter }) => {
                         <Search size={18} className="text-muted" />
                         <input 
                             type="text" 
-                            placeholder="Search..." 
+                            placeholder={t('sidebar.search_placeholder')} 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -161,35 +163,35 @@ const SecondarySidebar = ({ currentFilter }) => {
                         className="add-friend-btn" 
                         onClick={() => setIsAddingFriend(!isAddingFriend)}
                     >
-                        <UserPlus size={16} /> Add Friend
+                        <UserPlus size={16} /> {t('sidebar.add_friend')}
                     </button>
                     
                     {isAddingFriend && (
                         <form className="add-friend-form" onSubmit={handleAddFriend}>
                             <input 
                                 type="text" 
-                                placeholder="Friend's Public ID" 
+                                placeholder={t('sidebar.friend_id_placeholder')} 
                                 value={friendId}
                                 onChange={(e) => setFriendId(e.target.value)}
                                 disabled={actionLoading}
                                 autoFocus
                             />
                             <button type="submit" disabled={actionLoading || !friendId.trim()}>
-                                Add
+                                {t('sidebar.add')}
                             </button>
                         </form>
                     )}
                     
                     {user?.pending_requests?.length > 0 && (
                         <div className="pending-requests-panel">
-                            <div className="pr-header">Solicitudes ({user.pending_requests.length})</div>
+                            <div className="pr-header">{t('sidebar.requests')} ({user.pending_requests.length})</div>
                             {user.pending_requests.map(req => (
                                 <div key={req._id} className="pr-item">
                                     <span className="pr-name">{req.name}</span>
                                     <div className="pr-actions">
-                                        <button onClick={() => handleFriendRequest(req._id, 'accept')} title="Accept" className="pr-btn accept"><Check size={14}/></button>
-                                        <button onClick={() => handleFriendRequest(req._id, 'decline')} title="Decline" className="pr-btn decline"><X size={14}/></button>
-                                        <button onClick={() => handleFriendRequest(req._id, 'block')} title="Block" className="pr-btn block"><Ban size={14}/></button>
+                                        <button onClick={() => handleFriendRequest(req._id, 'accept')} title={t('sidebar.accept')} className="pr-btn accept"><Check size={14}/></button>
+                                        <button onClick={() => handleFriendRequest(req._id, 'decline')} title={t('sidebar.decline')} className="pr-btn decline"><X size={14}/></button>
+                                        <button onClick={() => handleFriendRequest(req._id, 'block')} title={t('sidebar.block')} className="pr-btn block"><Ban size={14}/></button>
                                     </div>
                                 </div>
                             ))}
@@ -199,7 +201,7 @@ const SecondarySidebar = ({ currentFilter }) => {
 
                 <div className="sidebar-list" ref={menuRef}>
                     {loading ? (
-                        <div className="text-center p-4 text-muted">Loading...</div>
+                        <div className="text-center p-4 text-muted">{t('sidebar.loading')}</div>
                     ) : (
                         filteredItems.map((item) => {
                             const isWorkspace = item.type === 'workspace';
@@ -232,19 +234,19 @@ const SecondarySidebar = ({ currentFilter }) => {
                                             {isWorkspace ? (
                                                 <>
                                                     <button className="menu-item" onClick={() => { setActiveContextMenu(null); navigate(`/workspace/${item.id}`); }}>
-                                                        <Hash size={16} /> Open workspace
+                                                        <Hash size={16} /> {t('sidebar.open_workspace')}
                                                     </button>
                                                     <button className="menu-item" onClick={() => { setActiveContextMenu(null); setInviteWorkspaceId(item.id); }}>
-                                                        <UserPlus size={16} /> Add friend to workspace
+                                                        <UserPlus size={16} /> {t('sidebar.add_friend_workspace')}
                                                     </button>
                                                     <button className="menu-item" onClick={(e) => handleMuteWorkspace(item.id, e)}>
-                                                        <VolumeX size={16} /> {user?.muted_workspaces?.includes(item.id) ? 'Unmute workspace' : 'Mute workspace'}
+                                                        <VolumeX size={16} /> {user?.muted_workspaces?.includes(item.id) ? t('sidebar.unmute_workspace') : t('sidebar.mute_workspace')}
                                                     </button>
                                                     {(item.role?.toLowerCase() === 'owner') && (
                                                         <>
                                                             <div className="menu-divider" />
                                                             <button className="menu-item delete" onClick={(e) => handleDeleteWorkspace(item.id, e)}>
-                                                                <Trash2 size={16} /> Delete workspace
+                                                                <Trash2 size={16} /> {t('sidebar.delete_workspace')}
                                                             </button>
                                                         </>
                                                     )}
@@ -252,20 +254,20 @@ const SecondarySidebar = ({ currentFilter }) => {
                                             ) : (
                                                 <>
                                                     <button className="menu-item" onClick={() => { setActiveContextMenu(null); setSelectedFriendProfile(item); }}>
-                                                        <UserIcon size={16} /> View Profile
+                                                        <UserIcon size={16} /> {t('sidebar.view_profile')}
                                                     </button>
                                                     <button className="menu-item" onClick={(e) => handleMuteFriend(item.id, e)}>
-                                                        <VolumeX size={16} /> {user?.muted_friends?.includes(item.id) ? 'Unmute friend' : 'Mute friend'}
+                                                        <VolumeX size={16} /> {user?.muted_friends?.includes(item.id) ? t('sidebar.unmute_friend') : t('sidebar.mute_friend')}
                                                     </button>
                                                     <button className="menu-item" onClick={() => setActiveContextMenu(null)}>
-                                                        <CheckSquare size={16} /> Mark as read
+                                                        <CheckSquare size={16} /> {t('sidebar.mark_as_read')}
                                                     </button>
                                                     <div className="menu-divider" />
                                                     <button className="menu-item delete" onClick={(e) => handleBlockFriend(item.id, e)}>
-                                                        <Ban size={16} /> Block friend
+                                                        <Ban size={16} /> {t('sidebar.block_friend')}
                                                     </button>
                                                     <button className="menu-item delete" onClick={(e) => handleRemoveFriend(item.id, e)}>
-                                                        <Trash2 size={16} /> Delete friend
+                                                        <Trash2 size={16} /> {t('sidebar.delete_friend')}
                                                     </button>
                                                 </>
                                             )}
@@ -276,7 +278,7 @@ const SecondarySidebar = ({ currentFilter }) => {
                         })
                     )}
                     {!loading && filteredItems.length === 0 && (
-                        <div className="text-center p-4 text-muted">No results found</div>
+                        <div className="text-center p-4 text-muted">{t('sidebar.no_results')}</div>
                     )}
                 </div>
             </aside>

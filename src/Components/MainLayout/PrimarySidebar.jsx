@@ -3,12 +3,16 @@ import { MessageSquare, Hash, Settings, User as UserIcon, LogOut } from 'lucide-
 import { useAuth } from '../../hooks/useAuth';
 import ProfilePanel from '../ProfilePanel/ProfilePanel';
 import LogoutModal from './LogoutModal';
+import SettingsModal from '../SettingsModal/SettingsModal';
+import { useLanguage } from '../../Context/LanguageContext';
 
 const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
+    const { t } = useLanguage();
     const { user, logout } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const menuRef = useRef(null);
 
     useEffect(() => {
@@ -57,7 +61,7 @@ const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
                 </div>
 
                 <div className="sidebar-bottom">
-                    <div className="sidebar-icon" title="Settings">
+                    <div className="sidebar-icon" title="Settings" onClick={() => setIsSettingsOpen(true)}>
                         <Settings size={24} />
                     </div>
                     <div className="profile-container" ref={menuRef}>
@@ -77,12 +81,12 @@ const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
                             <div className="profile-context-menu">
                                 <button className="menu-item" onClick={handleOpenProfile}>
                                     <UserIcon size={18} />
-                                    <span>Profile</span>
+                                    <span>{t('logout.profile')}</span>
                                 </button>
                                 <div className="menu-divider" />
                                 <button className="menu-item logout" onClick={handleLogoutClick}>
                                     <LogOut size={18} />
-                                    <span>Log out</span>
+                                    <span>{t('logout.logout')}</span>
                                 </button>
                             </div>
                         )}
@@ -99,6 +103,10 @@ const PrimarySidebar = ({ currentFilter, onFilterChange }) => {
                     onConfirm={handleConfirmLogout} 
                     onCancel={() => setIsLogoutModalOpen(false)} 
                 />
+            )}
+
+            {isSettingsOpen && (
+                <SettingsModal onClose={() => setIsSettingsOpen(false)} />
             )}
         </>
     );

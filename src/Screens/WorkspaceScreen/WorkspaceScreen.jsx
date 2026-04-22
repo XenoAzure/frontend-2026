@@ -6,9 +6,11 @@ import { useAuth } from '../../hooks/useAuth';
 import ENVIRONMENT from '../../config/environment';
 import WorkspaceScreenMembersModal from './WorkspaceScreenMembersModal';
 import TaskRectangle from './TaskRectangle';
+import { useLanguage } from '../../Context/LanguageContext';
 import './WorkspaceScreen.css';
 
 const WorkspaceScreen = () => {
+    const { t } = useLanguage();
     const { workspace_id } = useParams();
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -115,7 +117,7 @@ const WorkspaceScreen = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ title: 'New Assignment', subtasks: [] })
+                body: JSON.stringify({ title: t('workspace_screen.new_assignment'), subtasks: [] })
             });
             if (res.ok) {
                 const data = await res.json();
@@ -173,8 +175,8 @@ const WorkspaceScreen = () => {
         }
     };
 
-    if (loading) return <div className="workspace-loading">INITIALIZING SECURE CONNECTION...</div>;
-    if (!workspace) return <div className="workspace-loading" style={{ color: 'var(--error-color)' }}>WORKSPACE NOT FOUND</div>;
+    if (loading) return <div className="workspace-loading">{t('loading_states.initializing')}</div>;
+    if (!workspace) return <div className="workspace-loading" style={{ color: 'var(--error-color)' }}>{t('workspace_screen.not_found')}</div>;
 
     const visibleAvatars = members.slice(0, 3);
 
@@ -207,19 +209,19 @@ const WorkspaceScreen = () => {
                     {showMenu && (
                         <div className="item-context-menu">
                             <button className="menu-item" onClick={() => { setShowMenu(false); setShowMembersModal(true); }}>
-                                <Users size={16} /> View all members
+                                <Users size={16} /> {t('sidebar.view_all_members')}
                             </button>
                             <button className="menu-item" onClick={() => setShowMenu(false)}>
-                                <VolumeX size={16} /> Mute notifications
+                                <VolumeX size={16} /> {t('sidebar.mute_notifications')}
                             </button>
                             <button className="menu-item" onClick={() => setShowMenu(false)}>
-                                <CheckSquare size={16} /> Mark as read
+                                <CheckSquare size={16} /> {t('sidebar.mark_as_read')}
                             </button>
                             {activeRole !== 'owner' && (
                                 <>
                                     <div className="menu-divider" />
                                     <button className="menu-item logout" onClick={handleLeaveWorkspace}>
-                                        <LogOut size={16} /> Leave workspace
+                                        <LogOut size={16} /> {t('sidebar.leave_workspace')}
                                     </button>
                                 </>
                             )}
@@ -233,10 +235,10 @@ const WorkspaceScreen = () => {
                         <textarea value={editDesc} onChange={e => setEditDesc(e.target.value)} className="task-input-desc" rows={2} />
                         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
                             <button onClick={handleUpdateHeader} className="btn-save" style={{ padding: '0.3rem 1rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <Save size={14}/> Save
+                                <Save size={14}/> {t('workspace_screen.save')}
                             </button>
                             <button onClick={() => setIsEditingHeader(false)} className="btn-secondary" style={{ padding: '0.3rem 1rem', fontSize: '0.85rem' }}>
-                                Cancel
+                                {t('workspace_screen.cancel')}
                             </button>
                         </div>
                     </div>
@@ -258,7 +260,7 @@ const WorkspaceScreen = () => {
             <div className="workspace-content" style={{ zIndex: 5, position: 'relative' }}>
                 <div className="assignments-container">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h3 style={{ fontFamily: 'Orbitron', color: 'var(--primary-color)' }}>ASSIGNMENTS</h3>
+                        <h3 style={{ fontFamily: 'Orbitron', color: 'var(--primary-color)' }}>{t('workspace_screen.assignments')}</h3>
                         {isPrivileged && (
                             <button onClick={handleTaskCreate} className="icon-btn primary" title="Add Assignment Block">
                                 <Plus size={18} />
@@ -280,7 +282,7 @@ const WorkspaceScreen = () => {
                     
                     {tasks.length === 0 && (
                         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-                            No active assignments.
+                            {t('workspace_screen.no_assignments')}
                         </div>
                     )}
                 </div>

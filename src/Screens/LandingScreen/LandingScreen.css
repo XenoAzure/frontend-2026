@@ -428,6 +428,7 @@
     color: var(--primary-color);
     text-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
     animation: none;
+    transform: translateY(1.5px);
 }
 
 .landing-header .brand-name {
@@ -802,7 +803,7 @@
     opacity: 0.12;
 }
 
-/* Responsive */
+
 @media (max-width: 1024px) {
     .landing-hero {
         grid-template-columns: 1fr;

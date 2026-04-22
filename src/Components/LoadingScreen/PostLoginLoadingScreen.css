@@ -19,9 +19,7 @@
     pointer-events: none;
 }
 
-/* ========================================================= */
-/* CENTERED DELTA SYMBOL */
-/* ========================================================= */
+
 .delta-container {
     position: relative;
     z-index: 10;
@@ -56,63 +54,129 @@
     opacity: 0;
 }
 
-/* ========================================================= */
-/* ANIMATED OCEAN WAVES */
-/* ========================================================= */
-.waves-container {
+
+.strings-container {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 30vh;
+    height: 40vh;
     z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
     overflow: hidden;
-    transition: transform 0.5s ease-in;
+    transition: transform 0.5s cubic-bezier(0.8, 0, 0.2, 1);
 }
 
-.waves-container.waves-exit {
+.strings-container.strings-exit {
     transform: translateY(100%);
 }
 
-.wave {
-    position: absolute;
-    bottom: -10px;
-    /* Hide bottom gap */
-    width: 200%;
-    height: 100%;
-    animation: waveTranslate linear infinite;
-    transform-origin: bottom;
+.string {
+    height: 1px;
+    width: 150%;
+    margin-left: -25%;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--primary-color) 20%,
+            var(--secondary-color) 50%,
+            var(--primary-color) 80%,
+            transparent 100%);
+    opacity: 0.3;
+    filter: blur(1px);
+    animation: stringScan 10s ease-in-out infinite alternate;
 }
 
-/* Speed and delay variances for depth */
-.wave-back {
-    animation-duration: 20s;
-    height: 120%;
-}
-
-.wave-mid {
-    animation-duration: 14s;
-    animation-direction: reverse;
-    height: 90%;
-}
-
-.wave-front {
-    animation-duration: 9s;
-    height: 60%;
-}
-
-@keyframes waveTranslate {
+@keyframes stringScan {
     0% {
-        transform: translateX(0) scaleY(1);
+        transform: translateX(-5%) scaleX(0.9);
+        opacity: 0.1;
     }
 
     50% {
-        transform: translateX(-25%) scaleY(1.1);
+        opacity: 0.4;
     }
 
     100% {
-        transform: translateX(-50%) scaleY(1);
+        transform: translateX(5%) scaleX(1.1);
+        opacity: 0.2;
     }
+}
+
+/* Individual String Variances */
+.string-1 {
+    animation-duration: 7s;
+    animation-delay: -1s;
+    opacity: 0.2;
+}
+
+.string-2 {
+    animation-duration: 9s;
+    animation-delay: -3s;
+    opacity: 0.4;
+}
+
+.string-3 {
+    animation-duration: 11s;
+    animation-delay: -5s;
+    opacity: 0.1;
+}
+
+.string-4 {
+    animation-duration: 8s;
+    animation-delay: -2s;
+    opacity: 0.3;
+}
+
+.string-5 {
+    animation-duration: 13s;
+    animation-delay: -7s;
+    opacity: 0.2;
+}
+
+.string-6 {
+    animation-duration: 6s;
+    animation-delay: -1.5s;
+    opacity: 0.4;
+}
+
+.string-7 {
+    animation-duration: 10s;
+    animation-delay: -4s;
+    opacity: 0.1;
+}
+
+.string-8 {
+    animation-duration: 12s;
+    animation-delay: -6s;
+    opacity: 0.3;
+}
+
+.string-9 {
+    animation-duration: 9s;
+    animation-delay: -2.5s;
+    opacity: 0.2;
+}
+
+.string-10 {
+    animation-duration: 14s;
+    animation-delay: -8s;
+    opacity: 0.4;
+}
+
+.string-11 {
+    animation-duration: 7.5s;
+    animation-delay: -3.5s;
+    opacity: 0.1;
+}
+
+.string-12 {
+    animation-duration: 11s;
+    animation-delay: -0.5s;
+    opacity: 0.3;
 }
 
 /* ========================================================= */
@@ -178,7 +242,7 @@
     transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2));
 }
 
-/* Cube Variations specifically for Loading Screen */
+
 .cube-1 {
     left: 10%;
     --cube-size: 60px;
@@ -257,7 +321,7 @@
     }
 }
 
-/* Light theme overrides */
+
 :root[data-theme='light'] .post-login-overlay {
     background: #f8fafc;
 }

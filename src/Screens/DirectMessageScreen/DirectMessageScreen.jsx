@@ -3,10 +3,12 @@ import { useParams } from 'react-router';
 import { useAuth } from '../../hooks/useAuth';
 import ENVIRONMENT from '../../config/environment';
 import { getToken } from '../../Context/AuthContext';
-import { Send, Paperclip, File, Download } from 'lucide-react';
+import { Send, Paperclip, File, Download, User } from 'lucide-react';
+import { useLanguage } from '../../Context/LanguageContext';
 import './DirectMessageScreen.css';
 
 const DirectMessageScreen = () => {
+    const { t } = useLanguage();
     const { friend_id } = useParams();
     const { user } = useAuth();
     const [messages, setMessages] = useState([]);
@@ -17,6 +19,8 @@ const DirectMessageScreen = () => {
     const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
+    const messagesAreaRef = useRef(null);
+    const prevMessagesLength = useRef(0);
 
     // Auto-scroll to bottom of messages
     const scrollToBottom = () => {
@@ -25,8 +29,20 @@ const DirectMessageScreen = () => {
 
     // Keep scroll pinned to bottom when new messages load, but only if we were already near bottom
     useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+        const container = messagesAreaRef.current;
+        if (!container) return;
+
+        // If new messages arrived
+        if (messages.length > prevMessagesLength.current) {
+            const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
+            const lastMessageIsMine = messages.length > 0 && messages[messages.length - 1].from === user.id;
+
+            if (isNearBottom || lastMessageIsMine) {
+                scrollToBottom();
+            }
+        }
+        prevMessagesLength.current = messages.length;
+    }, [messages, user.id]);
 
     useEffect(() => {
         if (!user || !user.friends) return;
@@ -109,7 +125,7 @@ const DirectMessageScreen = () => {
     };
 
     if (loading) {
-        return <div className="dm-loading">Cargando chat...</div>;
+        return <div className="dm-loading">{t('loading_states.initializing')}</div>;
     }
     return (
         <div className="dm-container">
@@ -130,11 +146,17 @@ const DirectMessageScreen = () => {
             <div className="dm-header">
                 <div className="dm-header-info">
                     <h2>{friend ? friend.name : 'Unknown'}</h2>
-                    <span className="dm-public-id">ID: {friend ? friend.public_id : '...'}</span>
+                </div>
+                <div className="dm-header-avatar">
+                    {friend && friend.profile_picture ? (
+                        <img src={friend.profile_picture} alt={friend.name} />
+                    ) : (
+                        <User size={24} color="var(--text-muted)" />
+                    )}
                 </div>
             </div>
 
-            <div className="dm-messages-area">
+            <div className="dm-messages-area" ref={messagesAreaRef}>
                 {messages.length === 0 ? (
                     <div className="dm-empty-state">
                         <p>No hay mensajes todavía. ¡Escribe algo para empezar!</p>

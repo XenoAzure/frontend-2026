@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { CheckCircle, Circle, Edit2, Plus, Save, X, Trash2 } from 'lucide-react';
+import { useLanguage } from '../../Context/LanguageContext';
 
 const TaskRectangle = ({ task, isPrivileged, onUpdate, onDelete }) => {
+    const { t } = useLanguage();
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description || '');
@@ -23,7 +25,7 @@ const TaskRectangle = ({ task, isPrivileged, onUpdate, onDelete }) => {
     };
 
     const handleToggleSubtask = (index) => {
-        // Users cannot toggle; only privileged can actually change the task.
+
         if (!isPrivileged) return;
 
         const newSubtasks = [...subtasks];
@@ -39,7 +41,7 @@ const TaskRectangle = ({ task, isPrivileged, onUpdate, onDelete }) => {
     };
 
     const handleAddSubtask = () => {
-        setSubtasks([...subtasks, { title: 'New task', completed: false }]);
+        setSubtasks([...subtasks, { title: t('workspace_screen.new_task'), completed: false }]);
     };
 
     const handleSubtaskTitleChange = (index, newTitle) => {
@@ -62,13 +64,13 @@ const TaskRectangle = ({ task, isPrivileged, onUpdate, onDelete }) => {
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     className="task-input-title"
-                    placeholder="Task Group Name"
+                    placeholder={t('workspace_screen.task_group_name')}
                 />
                 <textarea
                     value={description}
                     onChange={e => setDescription(e.target.value)}
                     className="task-input-desc"
-                    placeholder="Description (Optional)"
+                    placeholder={t('workspace_screen.description_optional')}
                     rows={2}
                 />
 
@@ -85,7 +87,7 @@ const TaskRectangle = ({ task, isPrivileged, onUpdate, onDelete }) => {
                         </div>
                     ))}
                     <button onClick={handleAddSubtask} className="add-subtask-btn">
-                        <Plus size={14} /> Add subtask
+                        <Plus size={14} /> {t('workspace_screen.add_subtask')}
                     </button>
                 </div>
 
@@ -124,7 +126,7 @@ const TaskRectangle = ({ task, isPrivileged, onUpdate, onDelete }) => {
 
             <div className="task-footer">
                 <span className="task-ratio" style={{ color: isFullyCompleted ? 'var(--success-color)' : 'var(--text-muted)' }}>
-                    Tasks {completedSubtasks}/{totalSubtasks}
+                    {t('workspace_screen.tasks')} {completedSubtasks}/{totalSubtasks}
                 </span>
                 {isFullyCompleted && <CheckCircle size={18} className="text-success" />}
             </div>

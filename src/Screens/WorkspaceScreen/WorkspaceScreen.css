@@ -43,9 +43,13 @@
 
 .workspace-loading {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
   color: var(--primary-color);
   font-family: 'Orbitron', sans-serif;
   font-weight: 700;

@@ -389,3 +389,53 @@ body {
     width: 100%;
   }
 }
+
+.home-screen-container {
+  margin: 2rem auto !important;
+}
+
+.home-mobile-view {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .home-desktop-view {
+    display: none;
+  }
+  
+  .home-mobile-view {
+    display: block;
+    width: 100%;
+  }
+
+  .home-screen-container {
+    margin: 0 !important;
+    padding: 1.5rem 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  .mobile-home-search {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+  }
+
+  .mobile-home-search .search-box {
+    width: 100%;
+  }
+  
+  .mobile-home-list {
+    padding: 0;
+    width: 100%;
+  }
+
+  .mobile-home-list .list-item {
+    padding: 1rem 1.5rem;
+  }
+
+  .add-friend-container-mobile {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+}
