@@ -224,6 +224,43 @@
     background: rgba(239, 68, 68, 0.1);
 }
 
+.account-disclosure-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    padding: 0;
+    transition: color 0.15s;
+}
+
+.account-disclosure-btn:hover {
+    color: var(--primary-color);
+}
+
+.account-disclosure-btn.danger {
+    color: var(--error-color);
+}
+
+.account-disclosure-btn.danger:hover {
+    color: var(--error-color);
+    opacity: 0.85;
+}
+
+.account-disclosure-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 .settings-actions-row {
     display: flex;
     gap: 1rem;

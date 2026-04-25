@@ -379,21 +379,36 @@
 
 
 @media (max-width: 768px) {
-    .profile-panel {
+
+    .profile-panel:not(.view-only) {
         width: 100%;
         max-width: 100%;
-        max-height: 100vh;
+        max-height: 92vh;
         border-radius: 0;
         margin: 0;
     }
 
-    .profile-overlay {
+    .profile-overlay:has(.profile-panel:not(.view-only)) {
         align-items: flex-end;
         padding: 0;
     }
 
+
+    .profile-panel.view-only {
+        width: 92%;
+        max-width: 480px;
+        max-height: 88vh;
+        border-radius: 0;
+        overflow-y: auto;
+    }
+
+    .profile-overlay {
+        align-items: center;
+        padding: 1rem;
+    }
+
     .panel-content {
-        padding: 1.5rem 1rem;
+        padding: 1.25rem 1rem;
     }
 
     .panel-header {

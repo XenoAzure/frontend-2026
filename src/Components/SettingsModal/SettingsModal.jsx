@@ -7,7 +7,7 @@ import './SettingsModal.css';
 const SettingsModal = ({ onClose }) => {
     const { language, t, toggleLanguage } = useLanguage();
     const [activeTab, setActiveTab] = useState('options');
-    
+
     // Theme switching logic
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
     const toggleTheme = (theme) => {
@@ -24,76 +24,76 @@ const SettingsModal = ({ onClose }) => {
                         <X size={20} />
                     </button>
                 </div>
-                
+
                 <div className="settings-content-wrapper">
                     <div className="settings-sidebar">
-                        <button 
+                        <button
                             className={`settings-tab ${activeTab === 'options' ? 'active' : ''}`}
                             onClick={() => setActiveTab('options')}
                         >
                             {t('settings.options_tab')}
                         </button>
-                        <button 
+                        <button
                             className={`settings-tab ${activeTab === 'account' ? 'active' : ''}`}
                             onClick={() => setActiveTab('account')}
                         >
                             {t('settings.account_tab')}
                         </button>
                     </div>
-                    
+
                     <div className="settings-main">
                         {activeTab === 'options' ? (
                             <div className="settings-section">
                                 <h3>{t('settings.options_tab')}</h3>
-                                
+
                                 <div className="settings-item">
                                     <div className="settings-item-info">
                                         <label>{t('settings.change_theme')}</label>
                                         <span className="settings-desc">{t('settings.switch_theme')}</span>
                                     </div>
                                     <div className="settings-actions">
-                                        <button 
-                                            className={`theme-btn ${currentTheme === 'dark' ? 'active' : ''}`} 
+                                        <button
+                                            className={`theme-btn ${currentTheme === 'dark' ? 'active' : ''}`}
                                             onClick={() => toggleTheme('dark')}
                                         >
                                             {t('settings.dark')}
                                         </button>
-                                        <button 
-                                            className={`theme-btn ${currentTheme === 'light' ? 'active' : ''}`} 
+                                        <button
+                                            className={`theme-btn ${currentTheme === 'light' ? 'active' : ''}`}
                                             onClick={() => toggleTheme('light')}
                                         >
                                             {t('settings.light')}
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <div className="settings-item">
                                     <div className="settings-item-info">
                                         <label>{t('settings.change_language')}</label>
                                         <span className="settings-desc">{t('settings.select_language')}</span>
                                     </div>
                                     <div className="settings-actions">
-                                        <button 
-                                            className={`theme-btn ${language === 'en' ? 'active' : ''}`} 
+                                        <button
+                                            className={`theme-btn ${language === 'en' ? 'active' : ''}`}
                                             onClick={() => toggleLanguage('en')}
                                         >
                                             {t('settings.english')}
                                         </button>
-                                        <button 
-                                            className={`theme-btn ${language === 'es' ? 'active' : ''}`} 
+                                        <button
+                                            className={`theme-btn ${language === 'es' ? 'active' : ''}`}
                                             onClick={() => toggleLanguage('es')}
                                         >
                                             {t('settings.spanish')}
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <div className="settings-item credentials-item">
                                     <div className="settings-item-info">
                                         <label>{t('settings.credentials')}</label>
                                     </div>
                                     <div className="credentials-box">
-                                        Build 1.2 Beta
+                                        Build 2.0 Beta
                                     </div>
                                 </div>
                             </div>

@@ -1,41 +1,134 @@
-import React from 'react';
-import { X, User } from 'lucide-react';
-import '../../Components/MainLayout/MainLayout.css';
+import React, { useState } from 'react';
+import { X, User, Crown, ShieldCheck, Copy } from 'lucide-react';
+import '../../Components/ProfilePanel/ProfilePanel.css';
+
+const ROLE_CONFIG = {
+    owner: { label: 'OWNER', color: 'var(--primary-color)', Icon: Crown },
+    admin: { label: 'ADMIN', color: 'var(--secondary-color)', Icon: ShieldCheck },
+    user: { label: 'USER', color: 'var(--text-muted)', Icon: null },
+};
 
 const WorkspaceScreenMembersModal = ({ members, onClose }) => {
+    const [copiedId, setCopiedId] = useState(null);
+
+    const handleCopy = (id) => {
+        navigator.clipboard.writeText(id);
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+    };
+
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ width: '400px', maxWidth: '90vw' }}>
-                <div className="modal-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid var(--border-color)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <User size={24} style={{ color: 'var(--primary-color)' }} />
-                        <span style={{ fontFamily: 'Orbitron' }}>Workspace Members</span>
-                    </div>
-                    <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
-                        <X size={20} />
-                    </button>
-                </div>
+        <div className="profile-overlay" onClick={onClose}>
+            <div
+                className="profile-panel view-only"
+                style={{ maxWidth: 480 }}
+                onClick={e => e.stopPropagation()}
+            >
 
-                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '300px', overflowY: 'auto' }}>
-                    {members.map(member => (
-                        <div key={member.member_id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-surface)', padding: '0.75rem', borderRadius: '4px', border: '1px solid var(--border-color)' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <User size={16} style={{ color: 'var(--text-muted)' }} />
-                                </div>
-                                <span style={{ color: 'var(--text-light)', fontWeight: '500' }}>{member.user_name || `User ID: ${member.user_id.substring(0, 8)}...`}</span>
-                            </div>
+                <header className="panel-header">
+                    <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <User size={20} style={{ color: 'var(--primary-color)' }} />
+                        Workspace Members
+                    </h2>
+                    <button className="close-btn" onClick={onClose}><X size={22} /></button>
+                </header>
 
-                            {(member.member_role === 'owner' || member.member_role === 'admin') && (
-                                <span style={{ fontSize: '0.75rem', fontFamily: 'Orbitron', color: member.member_role === 'owner' ? 'var(--primary-color)' : 'var(--text-muted)', padding: '0.2rem 0.5rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '4px' }}>
-                                    {member.member_role.toUpperCase()}
-                                </span>
-                            )}
-                        </div>
-                    ))}
+
+                <div className="panel-content" style={{ gap: '0.75rem' }}>
                     {members.length === 0 && (
-                        <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>No members found.</div>
+                        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                            No members found.
+                        </p>
                     )}
+
+                    {members.map(member => {
+                        const role = member.member_role?.toLowerCase() || 'user';
+                        const cfg = ROLE_CONFIG[role] || ROLE_CONFIG.user;
+                        const isCopied = copiedId === member.user_public_id;
+
+                        return (
+                            <div
+                                key={member.member_id}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '1rem',
+                                    padding: '0.75rem 1rem',
+                                    background: 'rgba(15,23,42,0.4)',
+                                    border: '1px solid var(--border-color)',
+                                    transition: 'all 0.15s',
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.borderColor = cfg.color}
+                                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                            >
+                                {/* Avatar */}
+                                <div style={{
+                                    width: 44, height: 44,
+                                    borderRadius: '50%',
+                                    border: `2px solid ${cfg.color}`,
+                                    overflow: 'hidden',
+                                    flexShrink: 0,
+                                    background: 'var(--bg-surface)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    {member.user_profile_picture ? (
+                                        <img
+                                            src={member.user_profile_picture}
+                                            alt={member.user_name}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                    ) : (
+                                        <User size={20} style={{ color: 'var(--text-muted)' }} />
+                                    )}
+                                </div>
+
+                                {/* Name + public id */}
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontWeight: 600, color: 'var(--text-light)', fontSize: '0.95rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        {member.user_name || 'Unknown'}
+                                    </div>
+                                    {member.user_public_id && (
+                                        <div
+                                            className="public-id-copy-hint"
+                                            onClick={() => handleCopy(member.user_public_id)}
+                                            style={{
+                                                fontSize: '0.75rem',
+                                                color: isCopied ? 'var(--primary-color)' : 'var(--text-muted)',
+                                                fontFamily: 'Orbitron',
+                                                letterSpacing: '0.5px',
+                                                marginTop: '0.1rem',
+                                                cursor: 'copy',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.4rem',
+                                                transition: 'color 0.2s'
+                                            }}
+                                            title="Click to copy Public ID"
+                                        >
+                                            {isCopied ? 'COPIED!' : member.user_public_id}
+                                            {!isCopied && <Copy size={10} />}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Role badge */}
+                                <div style={{
+                                    display: 'flex', alignItems: 'center', gap: '0.35rem',
+                                    padding: '0.25rem 0.6rem',
+                                    background: `${cfg.color}18`,
+                                    border: `1px solid ${cfg.color}55`,
+                                    color: cfg.color,
+                                    fontSize: '0.7rem',
+                                    fontFamily: 'Orbitron',
+                                    letterSpacing: '1px',
+                                    flexShrink: 0,
+                                }}>
+                                    {cfg.Icon && <cfg.Icon size={12} />}
+                                    {cfg.label}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>

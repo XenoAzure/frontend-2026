@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, Hash, User, UserPlus, MoreVertical, VolumeX, Trash2, Check, X, Ban, User as UserIcon, LogOut, CheckSquare } from 'lucide-react';
+import { Search, Hash, User, UserPlus, Building2, MoreVertical, VolumeX, Trash2, Check, X, Ban, User as UserIcon, LogOut, CheckSquare } from 'lucide-react';
 import useWorkspaces from '../../hooks/useWorkspaces';
 import { useAuth } from '../../hooks/useAuth';
 import ENVIRONMENT from '../../config/environment';
@@ -159,12 +159,21 @@ const SecondarySidebar = ({ currentFilter }) => {
                         />
                     </div>
                     
-                    <button 
-                        className="add-friend-btn" 
-                        onClick={() => setIsAddingFriend(!isAddingFriend)}
-                    >
-                        <UserPlus size={16} /> {t('sidebar.add_friend')}
-                    </button>
+                    <div className="sidebar-action-row">
+                        <button 
+                            className="add-friend-btn" 
+                            onClick={() => setIsAddingFriend(!isAddingFriend)}
+                        >
+                            <UserPlus size={16} /> {t('sidebar.add_friend')}
+                        </button>
+                        <button 
+                            className="new-workspace-btn" 
+                            onClick={() => navigate('/workspace/new')}
+                            title="New Workspace"
+                        >
+                            <Building2 size={16} />
+                        </button>
+                    </div>
                     
                     {isAddingFriend && (
                         <form className="add-friend-form" onSubmit={handleAddFriend}>
@@ -214,8 +223,13 @@ const SecondarySidebar = ({ currentFilter }) => {
                                     onClick={() => navigate(isWorkspace ? `/workspace/${item.id}` : `/dm/${item.id}`)}
                                     style={{ cursor: 'pointer', position: 'relative' }}
                                 >
-                                    <div className="item-avatar">
-                                        {isWorkspace ? <Hash size={16} /> : <User size={16} />}
+                                    <div className="item-avatar" style={!isWorkspace && item.profile_picture ? { padding: 0, overflow: 'hidden' } : {}}>
+                                        {isWorkspace
+                                            ? <Hash size={16} />
+                                            : item.profile_picture
+                                                ? <img src={item.profile_picture} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                                                : <User size={16} />
+                                        }
                                     </div>
                                     <span className="item-name">{item.name}</span>
                                     

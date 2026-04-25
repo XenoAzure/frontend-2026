@@ -13,7 +13,7 @@
   overflow: hidden;
 }
 
-/* Primary Sidebar */
+
 .primary-sidebar {
   width: 72px;
   background: rgba(15, 23, 42, 0.9);
@@ -79,7 +79,7 @@
   object-fit: cover;
 }
 
-/* Profile Context Menu */
+
 .profile-container {
   position: relative;
   width: 100%;
@@ -147,7 +147,7 @@
   margin: 0.4rem 0.5rem;
 }
 
-/* Secondary Sidebar */
+
 .secondary-sidebar {
   width: 300px;
   background: rgba(15, 23, 42, 0.6);
@@ -282,9 +282,14 @@
   color: var(--error-color);
 }
 
-.add-friend-btn {
+.sidebar-action-row {
   margin-top: 1rem;
-  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.add-friend-btn {
+  flex: 1;
   background: rgba(99, 102, 241, 0.1);
   border: 2px solid var(--primary-color);
   color: var(--primary-color);
@@ -306,6 +311,26 @@
 .add-friend-btn:hover {
   background: rgba(99, 102, 241, 0.2);
   transform: translateY(-1px);
+}
+
+.new-workspace-btn {
+  background: rgba(99, 102, 241, 0.1);
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.new-workspace-btn:hover {
+  background: rgba(99, 102, 241, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
 }
 
 .add-friend-form {
@@ -361,7 +386,7 @@
   background: var(--primary-hover);
 }
 
-/* Main Content Area */
+
 .main-content {
   flex: 1;
   display: flex;
@@ -447,20 +472,13 @@
   flex-direction: column;
 }
 
-/* Responsive */
+
 @media (max-width: 1024px) {
   .secondary-sidebar {
     width: 240px;
   }
 }
 
-@media (max-width: 768px) {
-  .secondary-sidebar {
-    display: none;
-  }
-}
-
-/* Pending Requests Panel */
 .pending-requests-panel {
   margin-top: 1rem;
   background: var(--bg-surface);
@@ -788,7 +806,7 @@
   margin: 0.4rem 0.5rem;
 }
 
-/* Mobile Toggle Button */
+
 .mobile-menu-toggle {
   display: none;
   background: transparent;
@@ -808,7 +826,7 @@
 }
 
 
-/* Tablet Mode (up to 1024px) */
+
 @media (max-width: 1024px) {
   .primary-sidebar {
     width: 64px;
@@ -893,9 +911,22 @@
     width: 90vw;
     padding: 1.5rem;
   }
+
+
+  .item-actions {
+    opacity: 1;
+  }
+
+  .action-btn {
+    padding: 0.4rem;
+  }
+
+  .sidebar-action-row {
+    display: flex;
+  }
 }
 
-/* 250px limit*/
+
 @media (max-width: 360px) {
   .secondary-sidebar {
     width: calc(100vw - 64px);

@@ -208,21 +208,25 @@ const DirectMessageScreen = () => {
                     onChange={handleFileChange}
                     style={{ display: 'none' }}
                 />
-                <button
-                    type="button"
-                    className="attachment-btn"
-                    onClick={() => fileInputRef.current.click()}
-                    disabled={isSending}
-                >
-                    <Paperclip size={20} />
-                </button>
-                <div className="input-with-preview">
-                    {attachment && (
+
+                {attachment && (
+                    <div className="file-preview-container">
                         <div className="file-preview">
                             <span>📎 {attachment.filename}</span>
                             <button type="button" onClick={() => setAttachment(null)}>×</button>
                         </div>
-                    )}
+                    </div>
+                )}
+
+                <div className="input-main-row">
+                    <button
+                        type="button"
+                        className="attachment-btn"
+                        onClick={() => fileInputRef.current.click()}
+                        disabled={isSending}
+                    >
+                        <Paperclip size={20} />
+                    </button>
                     <input
                         type="text"
                         value={newMessage}
@@ -231,10 +235,10 @@ const DirectMessageScreen = () => {
                         autoFocus
                         disabled={isSending}
                     />
+                    <button type="submit" className="send-btn" disabled={isSending || (!newMessage.trim() && !attachment)}>
+                        <Send size={18} />
+                    </button>
                 </div>
-                <button type="submit" disabled={isSending || (!newMessage.trim() && !attachment)}>
-                    <Send size={18} />
-                </button>
             </form>
         </div>
     );

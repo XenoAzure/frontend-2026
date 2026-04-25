@@ -145,7 +145,8 @@
 
 .dm-input-area {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
     padding: 1.5rem;
     background: var(--header-bg);
     border-top: 2px solid var(--primary-color);
@@ -153,7 +154,14 @@
     backdrop-filter: blur(20px);
 }
 
-.dm-input-area input {
+.input-main-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+}
+
+.input-main-row input {
     flex: 1;
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -165,7 +173,7 @@
     transition: all 0.2s;
 }
 
-.dm-input-area input:focus {
+.input-main-row input:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
 }
@@ -175,6 +183,7 @@
     color: var(--btn-text);
     border: none;
     padding: 0 1.5rem;
+    height: 42px; /* Fixed height to match input */
     border-radius: 0px;
     cursor: pointer;
     display: flex;
@@ -204,30 +213,35 @@
     color: var(--primary-color);
     cursor: pointer;
     padding: 0 0.5rem !important;
+    height: 42px; /* Match height */
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .attachment-btn:hover {
     color: var(--primary-color);
 }
 
-.input-with-preview {
-    flex: 1;
+.file-preview-container {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
 }
 
 .file-preview {
     background: var(--bg-grad-1);
     border: 1px solid var(--primary-color);
     padding: 0.4rem 0.8rem;
-    border-radius: 6px;
+    border-radius: 0px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.85rem;
     color: var(--text-light);
+    max-width: 100%;
+    overflow-x: auto; /* Act like a scroll for long names */
+    white-space: nowrap;
 }
 
 .file-preview button {
@@ -450,7 +464,7 @@
         gap: 0.5rem;
     }
 
-    .dm-input-area input {
+    .input-main-row input {
         padding: 0.6rem 0.8rem;
         font-size: 0.95rem;
     }
@@ -473,7 +487,7 @@
         gap: 0.4rem;
     }
 
-    .input-with-preview {
+    .input-main-row {
         flex: 1;
         min-width: 0;
     }
@@ -483,7 +497,8 @@
     }
 
     .dm-input-area button[type="submit"],
-    .dm-input-area>button:last-child {
+    .dm-input-area > button:last-child,
+    .attachment-btn {
         flex-shrink: 0;
         width: auto;
         padding: 0 0.75rem;

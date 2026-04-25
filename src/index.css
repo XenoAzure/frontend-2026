@@ -20,6 +20,8 @@
   --cube-border: rgba(168, 85, 247, 0.2);
   --glass-bg: rgba(15, 23, 42, 0.8);
   --btn-text: #ffffff;
+  --task-bg: rgba(20, 25, 30, 0.6);
+  --success-color: #10b981;
   --transition-speed: 0.3s;
 }
 
@@ -42,6 +44,8 @@
   --cube-border: rgba(8, 145, 178, 0.4);
   --glass-bg: rgba(255, 255, 255, 0.8);
   --btn-text: #0f172a;
+  --task-bg: rgba(255, 255, 255, 0.8);
+  --success-color: #059669;
 }
 
 * {
@@ -398,44 +402,60 @@ body {
   display: none;
 }
 
+.home-mobile-empty-state {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .home-desktop-view {
     display: none;
   }
-  
+
   .home-mobile-view {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
+    min-height: 60vh;
+    padding: 2rem;
   }
 
   .home-screen-container {
     margin: 0 !important;
-    padding: 1.5rem 0 !important;
+    padding: 0 !important;
     max-width: none !important;
     width: 100% !important;
   }
-  
-  .mobile-home-search {
-    padding: 0 1.5rem 1.5rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 1rem;
+
+  .home-mobile-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
+    animation: fadeInUp 0.5s ease-out forwards;
   }
 
-  .mobile-home-search .search-box {
-    width: 100%;
-  }
-  
-  .mobile-home-list {
-    padding: 0;
-    width: 100%;
-  }
-
-  .mobile-home-list .list-item {
-    padding: 1rem 1.5rem;
+  .home-mobile-empty-glyph {
+    font-size: 3rem;
+    color: var(--primary-color);
+    opacity: 0.4;
+    filter: drop-shadow(0 0 12px var(--primary-color));
+    animation: pulse-glyph 3s ease-in-out infinite;
   }
 
-  .add-friend-container-mobile {
-    padding: 0 1.5rem 1.5rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
+  @keyframes pulse-glyph {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50%       { opacity: 0.6;  transform: scale(1.08); }
+  }
+
+  .home-mobile-empty-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    line-height: 1.8;
   }
 }

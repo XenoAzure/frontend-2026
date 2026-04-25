@@ -3,20 +3,24 @@ import { useAuth } from '../../hooks/useAuth';
 import ENVIRONMENT from '../../config/environment';
 import { getToken } from '../../Context/AuthContext';
 import { useLanguage } from '../../Context/LanguageContext';
+import { KeyRound, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 
 const AccountSettings = () => {
     const { t } = useLanguage();
     const { logout } = useAuth();
     const token = getToken();
-    
+
+    // Panel open/close toggles
+    const [showPasswordPanel, setShowPasswordPanel] = useState(false);
+    const [showDeletePanel, setShowDeletePanel] = useState(false);
+
     // Change password state
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [passwordLoading, setPasswordLoading] = useState(false);
-    
+
     // Delete account state
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deletePassword, setDeletePassword] = useState('');
     const [deleteError, setDeleteError] = useState('');
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -24,12 +28,12 @@ const AccountSettings = () => {
     const handleChangePassword = async (e) => {
         e.preventDefault();
         setPasswordError('');
-        
+
         if (newPassword.length < 6) {
             setPasswordError(t('account.password_length_err'));
             return;
         }
-        
+
         setPasswordLoading(true);
         try {
             const res = await fetch(`${ENVIRONMENT.API_URL}/api/user/me/password`, {
@@ -43,7 +47,7 @@ const AccountSettings = () => {
                     new_password: newPassword
                 })
             });
-            
+
             const data = await res.json();
             if (res.ok) {
                 alert(t('account.password_success'));
@@ -61,12 +65,12 @@ const AccountSettings = () => {
     const handleDeleteAccount = async (e) => {
         e.preventDefault();
         setDeleteError('');
-        
+
         if (!deletePassword) {
             setDeleteError(t('account.delete_confirm_err'));
             return;
         }
-        
+
         setDeleteLoading(true);
         try {
             const res = await fetch(`${ENVIRONMENT.API_URL}/api/user/me`, {
@@ -79,7 +83,7 @@ const AccountSettings = () => {
                     current_password: deletePassword
                 })
             });
-            
+
             const data = await res.json();
             if (res.ok) {
                 alert(t('account.delete_success'));
@@ -94,73 +98,110 @@ const AccountSettings = () => {
         }
     };
 
+    const togglePasswordPanel = () => {
+        setShowPasswordPanel(p => !p);
+        // Reset state when closing
+        if (showPasswordPanel) {
+            setCurrentPassword('');
+            setNewPassword('');
+            setPasswordError('');
+        }
+    };
+
+    const toggleDeletePanel = () => {
+        setShowDeletePanel(p => !p);
+        if (showDeletePanel) {
+            setDeletePassword('');
+            setDeleteError('');
+        }
+    };
+
     return (
         <div className="settings-section">
             <h3>{t('account.title')}</h3>
-            
-            <div className="account-form-container">
-                <h4>{t('account.change_password')}</h4>
-                <form onSubmit={handleChangePassword} className="settings-form">
-                    <div className="input-group">
-                        <label>{t('account.current_password')}</label>
-                        <input 
-                            type="password" 
-                            value={currentPassword} 
-                            onChange={e => setCurrentPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="input-group">
-                        <label>{t('account.new_password')}</label>
-                        <input 
-                            type="password" 
-                            value={newPassword} 
-                            onChange={e => setNewPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    {passwordError && <div className="settings-error">{passwordError}</div>}
-                    <button type="submit" className="btn btn-primary" disabled={passwordLoading}>
-                        {passwordLoading ? t('account.updating') : t('account.change_password_btn')}
-                    </button>
-                </form>
+
+            {/*  Change Password  */}
+            <div className="account-form-container" style={{ marginBottom: '1rem' }}>
+                <button
+                    type="button"
+                    className="account-disclosure-btn"
+                    onClick={togglePasswordPanel}
+                    aria-expanded={showPasswordPanel}
+                >
+                    <span className="account-disclosure-label">
+                        <KeyRound size={18} style={{ color: 'var(--primary-color)' }} />
+                        {t('account.change_password')}
+                    </span>
+                    {showPasswordPanel ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
+
+                {showPasswordPanel && (
+                    <form onSubmit={handleChangePassword} className="settings-form" style={{ marginTop: '1.25rem' }}>
+                        <div className="input-group">
+                            <label>{t('account.current_password')}</label>
+                            <input
+                                type="password"
+                                value={currentPassword}
+                                onChange={e => setCurrentPassword(e.target.value)}
+                                required
+                                autoFocus
+                            />
+                        </div>
+                        <div className="input-group">
+                            <label>{t('account.new_password')}</label>
+                            <input
+                                type="password"
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        {passwordError && <div className="settings-error">{passwordError}</div>}
+                        <div className="settings-actions-row">
+                            <button type="button" className="btn btn-secondary" onClick={togglePasswordPanel}>
+                                {t('account.cancel')}
+                            </button>
+                            <button type="submit" className="btn btn-primary" disabled={passwordLoading}>
+                                {passwordLoading ? t('account.updating') : t('account.change_password_btn')}
+                            </button>
+                        </div>
+                    </form>
+                )}
             </div>
-            
-            <div className="settings-divider"></div>
-            
+
+            <div className="settings-divider" />
+
+            {/* Delete Account  */}
             <div className="account-form-container danger-zone">
-                <h4>{t('account.delete_account')}</h4>
-                <p className="danger-text">{t('account.delete_warning')}</p>
-                
-                {!showDeleteConfirm ? (
-                    <button 
-                        className="btn btn-danger" 
-                        onClick={() => setShowDeleteConfirm(true)}
-                    >
+                <button
+                    type="button"
+                    className="account-disclosure-btn danger"
+                    onClick={toggleDeletePanel}
+                    aria-expanded={showDeletePanel}
+                >
+                    <span className="account-disclosure-label">
+                        <Trash2 size={18} />
                         {t('account.delete_account')}
-                    </button>
-                ) : (
-                    <form onSubmit={handleDeleteAccount} className="settings-form delete-confirm-form">
+                    </span>
+                    {showDeletePanel ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
+
+                {showDeletePanel && (
+                    <form onSubmit={handleDeleteAccount} className="settings-form delete-confirm-form" style={{ marginTop: '1.25rem' }}>
+                        <p className="danger-text">{t('account.delete_warning')}</p>
                         <div className="input-group">
                             <label>{t('account.confirm_password')}</label>
-                            <input 
-                                type="password" 
-                                value={deletePassword} 
+                            <input
+                                type="password"
+                                value={deletePassword}
                                 onChange={e => setDeletePassword(e.target.value)}
                                 required
+                                autoFocus
                             />
                         </div>
                         {deleteError && <div className="settings-error">{deleteError}</div>}
                         <div className="settings-actions-row">
-                            <button 
-                                type="button" 
-                                className="btn btn-secondary" 
-                                onClick={() => {
-                                    setShowDeleteConfirm(false);
-                                    setDeletePassword('');
-                                    setDeleteError('');
-                                }}
-                            >
+                            <button type="button" className="btn btn-secondary" onClick={toggleDeletePanel}>
                                 {t('account.cancel')}
                             </button>
                             <button type="submit" className="btn btn-danger" disabled={deleteLoading}>
