@@ -23,6 +23,7 @@
   --task-bg: rgba(20, 25, 30, 0.6);
   --success-color: #10b981;
   --transition-speed: 0.3s;
+  --hover-bg: rgba(255, 255, 255, 0.05);
 }
 
 :root[data-theme='light'] {
@@ -46,6 +47,7 @@
   --btn-text: #0f172a;
   --task-bg: rgba(255, 255, 255, 0.8);
   --success-color: #059669;
+  --hover-bg: rgba(0, 0, 0, 0.05);
 }
 
 * {
