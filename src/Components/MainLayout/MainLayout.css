@@ -333,6 +333,38 @@
   box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
 }
 
+.reload-list-btn {
+  margin-top: 0.6rem;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 0.5rem 1rem;
+  border-radius: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  animation: slideDown 0.2s ease-out;
+}
+
+.reload-list-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: rgba(99, 102, 241, 0.08);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);
+}
+
+.reload-list-btn:active {
+  transform: scale(0.97);
+}
+
 .add-friend-form {
   margin-top: 1rem;
   display: flex;

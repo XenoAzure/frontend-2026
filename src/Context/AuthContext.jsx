@@ -28,6 +28,14 @@ function AuthContextProvider({ children }) {
     const [user, setUser] = useState(null)
     const [isLoadingUser, setIsLoadingUser] = useState(true)
     const [postLoginLoading, setPostLoginLoading] = useState(false);
+    const [autoUpdateMode, setAutoUpdateMode] = useState(() => {
+        return localStorage.getItem('auto_update_mode') || 'automatic';
+    });
+
+    const changeAutoUpdateMode = (mode) => {
+        setAutoUpdateMode(mode);
+        localStorage.setItem('auto_update_mode', mode);
+    };
 
     const fetchUserProfile = async (token) => {
         try {
@@ -103,6 +111,8 @@ function AuthContextProvider({ children }) {
         logout: handleLogout,
         postLoginLoading,
         finishPostLoginLoading,
+        autoUpdateMode,
+        setAutoUpdateMode: changeAutoUpdateMode,
         refreshUser: () => {
             const token = getToken();
             if (token) fetchUserProfile(token);

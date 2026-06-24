@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, Hash, User, UserPlus, Building2, MoreVertical, VolumeX, Trash2, Check, X, Ban, User as UserIcon, LogOut, CheckSquare } from 'lucide-react';
+import { Search, Hash, User, UserPlus, Building2, MoreVertical, VolumeX, Trash2, Check, X, Ban, User as UserIcon, LogOut, CheckSquare, RefreshCw } from 'lucide-react';
 import useWorkspaces from '../../hooks/useWorkspaces';
 import { useAuth } from '../../hooks/useAuth';
 import ENVIRONMENT from '../../config/environment';
@@ -11,8 +11,8 @@ import { useLanguage } from '../../Context/LanguageContext';
 
 const SecondarySidebar = ({ currentFilter }) => {
     const { t } = useLanguage();
-    const { workspaces, loading, loadWorkspaces } = useWorkspaces();
-    const { user, refreshUser } = useAuth();
+    const { workspaces, loading, isFirstLoad, loadWorkspaces } = useWorkspaces();
+    const { user, refreshUser, autoUpdateMode } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddingFriend, setIsAddingFriend] = useState(false);
     const [friendId, setFriendId] = useState('');
@@ -26,6 +26,16 @@ const SecondarySidebar = ({ currentFilter }) => {
     const menuRef = useRef(null);
     const navigate = useNavigate();
     const token = getToken();
+
+    // Auto-update interval: refresh every 8 seconds when mode is 'automatic'
+    useEffect(() => {
+        if (autoUpdateMode !== 'automatic') return;
+        const interval = setInterval(() => {
+            refreshUser();
+            loadWorkspaces();
+        }, 8000);
+        return () => clearInterval(interval);
+    }, [autoUpdateMode]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -174,6 +184,16 @@ const SecondarySidebar = ({ currentFilter }) => {
                             <Building2 size={16} />
                         </button>
                     </div>
+
+                    {autoUpdateMode === 'manual' && (
+                        <button
+                            className="reload-list-btn"
+                            onClick={() => { refreshUser(); loadWorkspaces(); }}
+                            title={t('sidebar.reload')}
+                        >
+                            <RefreshCw size={14} /> {t('sidebar.reload')}
+                        </button>
+                    )}
                     
                     {isAddingFriend && (
                         <form className="add-friend-form" onSubmit={handleAddFriend}>
@@ -209,7 +229,7 @@ const SecondarySidebar = ({ currentFilter }) => {
                 </div>
 
                 <div className="sidebar-list" ref={menuRef}>
-                    {loading ? (
+                    {isFirstLoad && loading ? (
                         <div className="text-center p-4 text-muted">{t('sidebar.loading')}</div>
                     ) : (
                         filteredItems.map((item) => {
@@ -291,7 +311,7 @@ const SecondarySidebar = ({ currentFilter }) => {
                             );
                         })
                     )}
-                    {!loading && filteredItems.length === 0 && (
+                    {!isFirstLoad && !loading && filteredItems.length === 0 && (
                         <div className="text-center p-4 text-muted">{t('sidebar.no_results')}</div>
                     )}
                 </div>

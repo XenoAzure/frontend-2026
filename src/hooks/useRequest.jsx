@@ -16,36 +16,37 @@ function useRequest (){
     const [response, setResponse] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 
     /* 
     Recibe una funcion que emita un consulta al servidor por parametro (Callback)
     */
     async function sendRequest( {requestCb} ){
-        console.log('hola')
         try{
-            setResponse(null) //Si habia una consulta anterior quiero limpiar la respuesta
-            setError(null) //Si habia una consulta anterior quiero limpiar el error
-            setLoading(true) //Como inicio una consulta al servidor quiero marcar que estamos cargando la respuesta
-            const response = await requestCb()
-        
-            setResponse(response) //Se guarda la respuesta
+            // Do NOT clear response — keep stale data visible during background refreshes
+            setError(null)
+            setLoading(true)
+            const res = await requestCb()
+            setResponse(res)
         }
         catch(error){
             console.log(error)
-            setError(error) //Se guarda el error
+            setError(error)
         }
         finally{
-            setLoading(false) //Pase lo que pase (error o todo bien) cargando vuelve a ser false
+            setLoading(false)
+            setIsFirstLoad(false)
         }
     }
 
 
     return {
-        sendRequest, //Funcion para activar una consulta al servidor
-        response, //Estado que guarda el estado de respuesta del servidor
-        error, //Estado que guarda el estado de error del servidor
-        loading //Estado que guarda el estado de cargando del servidor
+        sendRequest,
+        response,
+        error,
+        loading,
+        isFirstLoad
     }
 }
 

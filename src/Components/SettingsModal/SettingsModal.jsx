@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../Context/LanguageContext';
 import AccountSettings from './AccountSettings';
+import BlockedUsersSettings from './BlockedUsersSettings';
+import { useAuth } from '../../hooks/useAuth';
 import './SettingsModal.css';
 
 const SettingsModal = ({ onClose }) => {
     const { language, t, toggleLanguage } = useLanguage();
+    const { autoUpdateMode, setAutoUpdateMode } = useAuth();
     const [activeTab, setActiveTab] = useState('options');
 
     // Theme switching logic
@@ -38,6 +41,12 @@ const SettingsModal = ({ onClose }) => {
                             onClick={() => setActiveTab('account')}
                         >
                             {t('settings.account_tab')}
+                        </button>
+                        <button
+                            className={`settings-tab ${activeTab === 'blocked' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('blocked')}
+                        >
+                            {t('settings.blocked_tab')}
                         </button>
                     </div>
 
@@ -88,6 +97,27 @@ const SettingsModal = ({ onClose }) => {
                                     </div>
                                 </div>
 
+                                <div className="settings-item">
+                                    <div className="settings-item-info">
+                                        <label>{t('settings.auto_update')}</label>
+                                        <span className="settings-desc">{t('settings.auto_update_desc')}</span>
+                                    </div>
+                                    <div className="settings-actions">
+                                        <button
+                                            className={`theme-btn ${autoUpdateMode === 'automatic' ? 'active' : ''}`}
+                                            onClick={() => setAutoUpdateMode('automatic')}
+                                        >
+                                            {t('settings.automatic')}
+                                        </button>
+                                        <button
+                                            className={`theme-btn ${autoUpdateMode === 'manual' ? 'active' : ''}`}
+                                            onClick={() => setAutoUpdateMode('manual')}
+                                        >
+                                            {t('settings.manual')}
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div className="settings-item credentials-item">
                                     <div className="settings-item-info">
                                         <label>{t('settings.credentials')}</label>
@@ -97,8 +127,10 @@ const SettingsModal = ({ onClose }) => {
                                     </div>
                                 </div>
                             </div>
-                        ) : (
+                        ) : activeTab === 'account' ? (
                             <AccountSettings />
+                        ) : (
+                            <BlockedUsersSettings />
                         )}
                     </div>
                 </div>
