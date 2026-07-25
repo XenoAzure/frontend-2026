@@ -267,6 +267,13 @@ const WorkspaceScreen = () => {
         }
     };
 
+    const totalAssignments = tasks.length;
+    const completedAssignments = tasks.filter(task => {
+        const total = task.subtasks?.length || 0;
+        return total > 0 && task.subtasks.every(st => st.completed);
+    }).length;
+    const progressPercent = totalAssignments > 0 ? Math.round((completedAssignments / totalAssignments) * 100) : 0;
+
     if (loading) return <div className="workspace-loading">{t('loading_states.initializing')}</div>;
     if (!workspace) return <div className="workspace-loading" style={{ color: 'var(--error-color)' }}>{t('workspace_screen.not_found')}</div>;
 
@@ -306,10 +313,10 @@ const WorkspaceScreen = () => {
                 <div className="workspace-header-actions" ref={menuRef}>
                     {isPrivileged && (
                         <button
-                            className="action-btn"
-                            onClick={() => setInviteWorkspaceId(workspace_id)}
-                            title="Add Member"
-                            style={{ color: 'var(--primary-color)' }}
+                             className="action-btn"
+                             onClick={() => setInviteWorkspaceId(workspace_id)}
+                             title="Add Member"
+                             style={{ color: 'var(--primary-color)' }}
                         >
                             <UserPlus size={20} />
                         </button>
@@ -488,6 +495,18 @@ const WorkspaceScreen = () => {
 
             {activeTab === 'assignments' && (
                 <div className="workspace-content" style={{ zIndex: 5, position: 'relative' }}>
+                    {totalAssignments > 0 && (
+                        <div className="workspace-progress-section">
+                            <div className="progress-info">
+                                <span className="progress-label">{t('workspace_screen.completion')}</span>
+                                <span className="progress-value">{progressPercent}%</span>
+                            </div>
+                            <div className="progress-bar-wrapper">
+                                <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
+                            </div>
+                        </div>
+                    )}
+
                     <div className="assignments-container">
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h3 style={{ fontFamily: 'Orbitron', color: 'var(--primary-color)' }}>{t('workspace_screen.assignments')}</h3>

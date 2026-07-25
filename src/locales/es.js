@@ -184,6 +184,9 @@ export const es = {
         add_subtask: "Añadir subtarea",
         tasks: "Tareas",
         new_assignment: "Nueva asignación",
-        new_task: "Nueva tarea"
+        new_task: "Nueva tarea",
+        completion: "COMPLETACIÓN",
+        of: "de",
+        assignments_completed: "asignaciones completadas"
     }
 };

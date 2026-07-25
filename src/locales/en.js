@@ -184,6 +184,9 @@ export const en = {
         add_subtask: "Add subtask",
         tasks: "Tasks",
         new_assignment: "New Assignment",
-        new_task: "New task"
+        new_task: "New task",
+        completion: "COMPLETION",
+        of: "of",
+        assignments_completed: "assignments completed"
     }
 };
