@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { Search, Hash, User, UserPlus, Building2, MoreVertical, VolumeX, Trash2, Check, X, Ban, User as UserIcon, LogOut, CheckSquare, RefreshCw } from 'lucide-react';
 import useWorkspaces from '../../hooks/useWorkspaces';
 import { useAuth } from '../../hooks/useAuth';
@@ -8,15 +8,23 @@ import { getToken } from '../../Context/AuthContext';
 import FriendProfileModal from './FriendProfileModal';
 import InviteWorkspaceModal from './InviteWorkspaceModal';
 import { useLanguage } from '../../Context/LanguageContext';
+import { useNotifications } from '../../Context/NotificationContext';
+import useUnreadPolling from '../../hooks/useUnreadPolling';
 
 const SecondarySidebar = ({ currentFilter }) => {
     const { t } = useLanguage();
     const { workspaces, loading, isFirstLoad, loadWorkspaces } = useWorkspaces();
     const { user, refreshUser, autoUpdateMode } = useAuth();
+    const { unreadCounts, markAsRead } = useNotifications();
+    const { friend_id: activeFriendId } = useParams();
+    const perfMode = localStorage.getItem('perf_mode') === 'true';
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddingFriend, setIsAddingFriend] = useState(false);
     const [friendId, setFriendId] = useState('');
     const [actionLoading, setActionLoading] = useState(false);
+    
+    // Start background unread polling for all friends
+    useUnreadPolling(user?.id, user?.friends, activeFriendId);
     
     // UI states
     const [activeContextMenu, setActiveContextMenu] = useState(null);
@@ -151,13 +159,15 @@ const SecondarySidebar = ({ currentFilter }) => {
     return (
         <>
             <aside className="secondary-sidebar">
-                <div className="background-text-boxes-sidebar">
-                    {['SHARP', 'NODDY', '青い', 'X-AXIS', 'VOID', 'OPPOSE'].map((word, i) => (
-                        <div key={i} className={`text-box-wrapper sb-box-${i + 1}`}>
-                            <div className="text-box">{word}</div>
-                        </div>
-                    ))}
-                </div>
+                {!perfMode && (
+                    <div className="background-text-boxes-sidebar">
+                        {['SHARP', 'NODDY', '青い', 'X-AXIS', 'VOID', 'OPPOSE'].map((word, i) => (
+                            <div key={i} className={`text-box-wrapper sb-box-${i + 1}`}>
+                                <div className="text-box">{word}</div>
+                            </div>
+                        ))}
+                    </div>
+                )}
                 <div className="search-container">
                     <div className="search-box">
                         <Search size={18} className="text-muted" />
@@ -235,11 +245,12 @@ const SecondarySidebar = ({ currentFilter }) => {
                         filteredItems.map((item) => {
                             const isWorkspace = item.type === 'workspace';
                             const isMenuOpen = activeContextMenu === item.id;
+                            const unreadCount = !isWorkspace ? (unreadCounts[item.id] || 0) : 0;
                             
                             return (
                                 <div 
                                     key={`${item.type}-${item.id}`} 
-                                    className="list-item"
+                                    className={`list-item${unreadCount > 0 ? ' has-unread' : ''}`}
                                     onClick={() => navigate(isWorkspace ? `/workspace/${item.id}` : `/dm/${item.id}`)}
                                     style={{ cursor: 'pointer', position: 'relative' }}
                                 >
@@ -252,6 +263,9 @@ const SecondarySidebar = ({ currentFilter }) => {
                                         }
                                     </div>
                                     <span className="item-name">{item.name}</span>
+                                    {unreadCount > 0 && (
+                                        <span className="unread-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                                    )}
                                     
                                     <div className="item-actions">
                                         <button 
@@ -293,7 +307,7 @@ const SecondarySidebar = ({ currentFilter }) => {
                                                     <button className="menu-item" onClick={(e) => handleMuteFriend(item.id, e)}>
                                                         <VolumeX size={16} /> {user?.muted_friends?.includes(item.id) ? t('sidebar.unmute_friend') : t('sidebar.mute_friend')}
                                                     </button>
-                                                    <button className="menu-item" onClick={() => setActiveContextMenu(null)}>
+                                                    <button className="menu-item" onClick={() => { markAsRead(item.id); setActiveContextMenu(null); }}>
                                                         <CheckSquare size={16} /> {t('sidebar.mark_as_read')}
                                                     </button>
                                                     <div className="menu-divider" />

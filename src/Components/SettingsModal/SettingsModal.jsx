@@ -10,6 +10,12 @@ const SettingsModal = ({ onClose }) => {
     const { language, t, toggleLanguage } = useLanguage();
     const { autoUpdateMode, setAutoUpdateMode } = useAuth();
     const [activeTab, setActiveTab] = useState('options');
+    const [perfMode, setPerfMode] = useState(() => localStorage.getItem('perf_mode') === 'true');
+
+    const togglePerfMode = (value) => {
+        setPerfMode(value);
+        localStorage.setItem('perf_mode', String(value));
+    };
 
     // Theme switching logic
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -118,12 +124,33 @@ const SettingsModal = ({ onClose }) => {
                                     </div>
                                 </div>
 
+                                <div className="settings-item">
+                                    <div className="settings-item-info">
+                                        <label>{t('settings.perf_mode')}</label>
+                                        <span className="settings-desc">{t('settings.perf_mode_desc')}</span>
+                                    </div>
+                                    <div className="settings-actions">
+                                        <button
+                                            className={`theme-btn ${!perfMode ? 'active' : ''}`}
+                                            onClick={() => togglePerfMode(false)}
+                                        >
+                                            {t('settings.perf_mode_off')}
+                                        </button>
+                                        <button
+                                            className={`theme-btn ${perfMode ? 'active' : ''}`}
+                                            onClick={() => togglePerfMode(true)}
+                                        >
+                                            {t('settings.perf_mode_on')}
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div className="settings-item credentials-item">
                                     <div className="settings-item-info">
                                         <label>{t('settings.credentials')}</label>
                                     </div>
                                     <div className="credentials-box">
-                                        Build 2.0 Beta
+                                        Build 3.0 Beta
                                     </div>
                                 </div>
                             </div>

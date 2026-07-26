@@ -5,6 +5,10 @@ export const en = {
         cta: "Get Started for Free",
         login: "Log in",
         signup: "Sign up",
+        perf_mode_on: "⚡ Enable Performance Mode",
+        perf_mode_off: "⚡ Performance Mode: ON",
+        perf_mode_desc: "Disables 3D background effects and transitions for better performance on low-end devices",
+
         menu: {
             languages: "Languages",
             light_theme: "Light theme",
@@ -124,7 +128,12 @@ export const en = {
         select_language: "Select your preferred language",
         english: "English",
         spanish: "Spanish",
-        credentials: "Credentials"
+        credentials: "Credentials",
+        perf_mode: "Performance Mode",
+        perf_mode_desc: "Disables 3D backgrounds and transitions for low-end devices",
+        perf_mode_on: "Enabled",
+        perf_mode_off: "Disabled"
+
     },
     account: {
         title: "Account Settings",

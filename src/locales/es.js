@@ -5,6 +5,10 @@ export const es = {
         cta: "Empieza gratis",
         login: "Iniciar sesión",
         signup: "Registrarse",
+        perf_mode_on: "⚡ Activar Modo Rendimiento",
+        perf_mode_off: "⚡ Modo Rendimiento: ACTIVADO",
+        perf_mode_desc: "Desactiva los fondos 3D y las transiciones para mejorar el rendimiento en dispositivos de gama baja",
+
         menu: {
             languages: "Idiomas",
             light_theme: "Tema claro",
@@ -124,7 +128,12 @@ export const es = {
         select_language: "Selecciona tu idioma preferido",
         english: "Inglés",
         spanish: "Español",
-        credentials: "Credenciales"
+        credentials: "Credenciales",
+        perf_mode: "Modo Rendimiento",
+        perf_mode_desc: "Desactiva fondos 3D y transiciones para dispositivos de gama baja",
+        perf_mode_on: "Activado",
+        perf_mode_off: "Desactivado"
+
     },
     account: {
         title: "Configuración de cuenta",

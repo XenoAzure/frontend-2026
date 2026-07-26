@@ -5,12 +5,15 @@ import ENVIRONMENT from '../../config/environment';
 import { getToken } from '../../Context/AuthContext';
 import { Send, Paperclip, File, Download, User } from 'lucide-react';
 import { useLanguage } from '../../Context/LanguageContext';
+import { useNotifications } from '../../Context/NotificationContext';
 import './DirectMessageScreen.css';
 
 const DirectMessageScreen = () => {
     const { t } = useLanguage();
     const { friend_id } = useParams();
     const { user } = useAuth();
+    const { markAsRead } = useNotifications();
+    const perfMode = localStorage.getItem('perf_mode') === 'true';
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [attachment, setAttachment] = useState(null);
@@ -21,6 +24,11 @@ const DirectMessageScreen = () => {
     const fileInputRef = useRef(null);
     const messagesAreaRef = useRef(null);
     const prevMessagesLength = useRef(0);
+
+    // Mark this conversation as read whenever we open or switch to it
+    useEffect(() => {
+        if (friend_id) markAsRead(friend_id);
+    }, [friend_id]);
 
     // Auto-scroll to bottom of messages
     const scrollToBottom = () => {
@@ -129,20 +137,22 @@ const DirectMessageScreen = () => {
     }
     return (
         <div className="dm-container">
-            <div className="background-cubes">
-                {[...Array(6)].map((_, i) => (
-                    <div key={i} className={`cube-wrapper cube-${i + 1}`}>
-                        <div className="cube">
-                            <div className="face front"></div>
-                            <div className="face back"></div>
-                            <div className="face left"></div>
-                            <div className="face right"></div>
-                            <div className="face top"></div>
-                            <div className="face bottom"></div>
+            {!perfMode && (
+                <div className="background-cubes">
+                    {[...Array(6)].map((_, i) => (
+                        <div key={i} className={`cube-wrapper cube-${i + 1}`}>
+                            <div className="cube">
+                                <div className="face front"></div>
+                                <div className="face back"></div>
+                                <div className="face left"></div>
+                                <div className="face right"></div>
+                                <div className="face top"></div>
+                                <div className="face bottom"></div>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
             <div className="dm-header">
                 <div className="dm-header-info">
                     <h2>{friend ? friend.name : 'Unknown'}</h2>

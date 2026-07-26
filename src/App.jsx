@@ -13,6 +13,7 @@ import DirectMessageScreen from './Screens/DirectMessageScreen/DirectMessageScre
 import LoadingScreen from './Components/LoadingScreen/LoadingScreen'
 import MainLayout from './Components/MainLayout/MainLayout'
 import { LanguageProvider } from './Context/LanguageContext'
+import NotificationProvider from './Context/NotificationContext'
 
 
 const App = () => {
@@ -41,6 +42,7 @@ const App = () => {
   }, []);
 
   return (
+    <NotificationProvider>
     <LanguageProvider>
       {isLoading ? (
         <LoadingScreen isExiting={isExiting} />
@@ -80,6 +82,7 @@ const App = () => {
         </Routes>
       )}
     </LanguageProvider>
+    </NotificationProvider>
   )
 }
 

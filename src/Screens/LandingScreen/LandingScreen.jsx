@@ -11,6 +11,7 @@ const LandingScreen = () => {
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const [perfMode, setPerfMode] = useState(() => localStorage.getItem('perf_mode') === 'true');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,36 +32,51 @@ const LandingScreen = () => {
     };
 
     const handleNavigation = (path) => {
+        if (perfMode) {
+            // Skip the tile transition entirely in performance mode
+            navigate(path, { state: { fromLanding: true } });
+            return;
+        }
         setIsTransitioning(true);
         setTimeout(() => {
             navigate(path, { state: { fromLanding: true } });
         }, 800); // Wait for the grid to flip before navigating
     };
 
+    const togglePerfMode = () => {
+        const next = !perfMode;
+        setPerfMode(next);
+        localStorage.setItem('perf_mode', String(next));
+    };
+
     return (
         <div className="landing-page">
-            <div className="background-cubes">
-                {[...Array(6)].map((_, i) => (
-                    <div key={i} className={`cube-wrapper cube-${i + 1}`}>
-                        <div className="cube">
-                            <div className="face front"></div>
-                            <div className="face back"></div>
-                            <div className="face left"></div>
-                            <div className="face right"></div>
-                            <div className="face top"></div>
-                            <div className="face bottom"></div>
+            {!perfMode && (
+                <div className="background-cubes">
+                    {[...Array(6)].map((_, i) => (
+                        <div key={i} className={`cube-wrapper cube-${i + 1}`}>
+                            <div className="cube">
+                                <div className="face front"></div>
+                                <div className="face back"></div>
+                                <div className="face left"></div>
+                                <div className="face right"></div>
+                                <div className="face top"></div>
+                                <div className="face bottom"></div>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
 
-            <div className="background-text-boxes">
-                {['ADVENT', 'ASPECT', 'SHARP', 'NODDY', '@', 'KEEN', 'ADVANCE', '青い', 'X-AXIS', 'EMPRESS', 'NUMB', 'OPPOSE', 'VOCAL', 'ERGO', 'LABYRINTH', 'VOID', 'EXPRESS', 'TRAGEDY'].map((word, i) => (
-                    <div key={i} className={`text-box-wrapper box-${i + 1}`}>
-                        <div className="text-box">{word}</div>
-                    </div>
-                ))}
-            </div>
+            {!perfMode && (
+                <div className="background-text-boxes">
+                    {['ADVENT', 'ASPECT', 'SHARP', 'NODDY', '@', 'KEEN', 'ADVANCE', '青い', 'X-AXIS', 'EMPRESS', 'NUMB', 'OPPOSE', 'VOCAL', 'ERGO', 'LABYRINTH', 'VOID', 'EXPRESS', 'TRAGEDY'].map((word, i) => (
+                        <div key={i} className={`text-box-wrapper box-${i + 1}`}>
+                            <div className="text-box">{word}</div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {isTransitioning && <TransitionOverlay type="in" />}
 
@@ -106,6 +122,15 @@ const LandingScreen = () => {
                     </p>
                     <div className="hero-actions">
                         <button onClick={() => handleNavigation('/register')} className="btn hero-btn">{t('landing.cta')}</button>
+                        <button
+                            id="landing-perf-toggle"
+                            className={`perf-mode-btn${perfMode ? ' perf-active' : ''}`}
+                            onClick={togglePerfMode}
+                            title={t('landing.perf_mode_desc')}
+                        >
+                            <i className={`bi bi-${perfMode ? 'lightning-charge-fill' : 'lightning-charge'}`}></i>
+                            {perfMode ? t('landing.perf_mode_off') : t('landing.perf_mode_on')}
+                        </button>
                     </div>
                 </div>
                 <div className="hero-visual">

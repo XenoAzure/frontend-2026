@@ -16,6 +16,7 @@ const WorkspaceScreen = () => {
     const { workspace_id } = useParams();
     const { user } = useAuth();
     const navigate = useNavigate();
+    const perfMode = localStorage.getItem('perf_mode') === 'true';
 
     const [workspace, setWorkspace] = useState(null);
     const [members, setMembers] = useState([]);
@@ -279,13 +280,15 @@ const WorkspaceScreen = () => {
 
     return (
         <div className="workspace-container">
-            <div className="background-cubes">
-                {[...Array(6)].map((_, i) => (
-                    <div key={i} className={`cube-wrapper cube-${i + 1}`}>
-                        <div className="cube"><div className="face front"></div><div className="face back"></div><div className="face left"></div><div className="face right"></div><div className="face top"></div><div className="face bottom"></div></div>
-                    </div>
-                ))}
-            </div>
+            {!perfMode && (
+                <div className="background-cubes">
+                    {[...Array(6)].map((_, i) => (
+                        <div key={i} className={`cube-wrapper cube-${i + 1}`}>
+                            <div className="cube"><div className="face front"></div><div className="face back"></div><div className="face left"></div><div className="face right"></div><div className="face top"></div><div className="face bottom"></div></div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
 
             <div className="workspace-header" style={{ position: 'relative' }}>
