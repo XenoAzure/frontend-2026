@@ -653,47 +653,109 @@
     width: 100%;
     max-width: 500px;
     aspect-ratio: 16/10;
-    padding: 2rem;
+    padding: 0;
+    overflow: hidden;
     box-shadow: 20px 20px 0px rgba(99, 102, 241, 0.1);
     animation: float 6s ease-in-out infinite;
-}
-
-.preview-header {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
 }
 
-.dot {
-    width: 12px;
-    height: 12px;
+.carousel-image-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(10, 10, 15, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--primary-color);
+    color: var(--text-light);
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    font-size: 1.25rem;
+    padding: 0;
     border-radius: 0px;
+}
+
+.carousel-arrow.left {
+    left: 12px;
+}
+
+.carousel-arrow.right {
+    right: 12px;
+}
+
+.carousel-arrow:hover {
     background: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.7);
+    transform: translateY(-50%) scale(1.1);
 }
 
-.preview-content {
+.carousel-arrow:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    gap: 8px;
+    z-index: 10;
+    background: rgba(10, 10, 15, 0.5);
+    padding: 6px 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.preview-line {
-    height: 12px;
-    background: var(--text-muted);
-    opacity: 0.2;
+.indicator-dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.35);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
     border-radius: 0px;
 }
 
-.preview-line.long {
-    width: 90%;
+.indicator-dot:hover {
+    background: rgba(255, 255, 255, 0.7);
 }
 
-.preview-line.medium {
-    width: 60%;
-}
-
-.preview-line.short {
-    width: 40%;
+.indicator-dot.active {
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color);
+    width: 22px;
 }
 
 /* Footer */

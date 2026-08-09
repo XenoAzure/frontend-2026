@@ -3,7 +3,12 @@ import { useNavigate } from 'react-router';
 import TransitionOverlay from '../../Components/TransitionOverlay/TransitionOverlay';
 import { useLanguage } from '../../Context/LanguageContext';
 import { useAuth } from '../../hooks/useAuth';
+import c2 from '../../../images/c2.png';
+import c3 from '../../../images/c3.png';
+import c8 from '../../../images/c8.png';
 import './LandingScreen.css';
+
+const carouselImages = [c2, c3, c8];
 
 const LandingScreen = () => {
     const { language, t, toggleLanguage } = useLanguage();
@@ -12,6 +17,8 @@ const LandingScreen = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [perfMode, setPerfMode] = useState(() => localStorage.getItem('perf_mode') === 'true');
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [touchStartX, setTouchStartX] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -47,6 +54,30 @@ const LandingScreen = () => {
         const next = !perfMode;
         setPerfMode(next);
         localStorage.setItem('perf_mode', String(next));
+    };
+
+    const handlePrevImage = () => {
+        setCurrentImageIndex((prev) => (prev === 0 ? carouselImages.length - 1 : prev - 1));
+    };
+
+    const handleNextImage = () => {
+        setCurrentImageIndex((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1));
+    };
+
+    const handleTouchStart = (e) => {
+        setTouchStartX(e.touches[0].clientX);
+    };
+
+    const handleTouchEnd = (e) => {
+        if (touchStartX === null) return;
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+        if (diff > 50) {
+            handleNextImage();
+        } else if (diff < -50) {
+            handlePrevImage();
+        }
+        setTouchStartX(null);
     };
 
     return (
@@ -136,16 +167,44 @@ const LandingScreen = () => {
                 <div className="hero-visual">
                     <div className="glass-blob blob-1"></div>
                     <div className="glass-blob blob-2"></div>
-                    <div className="hero-card-preview">
-                        <div className="preview-header">
-                            <div className="dot"></div>
-                            <div className="dot"></div>
-                            <div className="dot"></div>
+                    <div 
+                        className="hero-card-preview hero-image-carousel"
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
+                    >
+                        <button 
+                            className="carousel-arrow left" 
+                            onClick={handlePrevImage}
+                            aria-label="Previous Image"
+                        >
+                            <i className="bi bi-chevron-left"></i>
+                        </button>
+
+                        <div className="carousel-image-wrapper">
+                            <img 
+                                src={carouselImages[currentImageIndex]} 
+                                alt={`Carousel Image ${currentImageIndex + 1}`} 
+                                className="carousel-image"
+                            />
                         </div>
-                        <div className="preview-content">
-                            <div className="preview-line long"></div>
-                            <div className="preview-line medium"></div>
-                            <div className="preview-line short"></div>
+
+                        <button 
+                            className="carousel-arrow right" 
+                            onClick={handleNextImage}
+                            aria-label="Next Image"
+                        >
+                            <i className="bi bi-chevron-right"></i>
+                        </button>
+
+                        <div className="carousel-indicators">
+                            {carouselImages.map((_, index) => (
+                                <button
+                                    key={index}
+                                    className={`indicator-dot ${index === currentImageIndex ? 'active' : ''}`}
+                                    onClick={() => setCurrentImageIndex(index)}
+                                    aria-label={`Go to image ${index + 1}`}
+                                />
+                            ))}
                         </div>
                     </div>
                 </div>
